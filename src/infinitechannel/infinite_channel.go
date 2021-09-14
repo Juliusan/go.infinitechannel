@@ -4,7 +4,7 @@ package infinitechannel
 type InfiniteChannel struct {
 	input, output chan interface{}
 	length        chan int
-	buffer        *Queue
+	buffer        *PriorityQueue
 }
 
 func NewInfiniteChannel() *InfiniteChannel {
@@ -12,7 +12,7 @@ func NewInfiniteChannel() *InfiniteChannel {
 		input:  make(chan interface{}),
 		output: make(chan interface{}),
 		length: make(chan int),
-		buffer: New(),
+		buffer: NewQueue(),
 	}
 	go ch.infiniteBuffer()
 	return ch

@@ -7,7 +7,7 @@ import (
 )
 
 func TestQueueSimple(t *testing.T) {
-	q := infinitechannel.New()
+	q := infinitechannel.NewQueue()
 
 	for i := 0; i < infinitechannel.MinQueueLen; i++ {
 		q.Add(i)
@@ -24,7 +24,7 @@ func TestQueueSimple(t *testing.T) {
 }
 
 func TestQueueWrapping(t *testing.T) {
-	q := infinitechannel.New()
+	q := infinitechannel.NewQueue()
 
 	for i := 0; i < infinitechannel.MinQueueLen; i++ {
 		q.Add(i)
@@ -43,7 +43,7 @@ func TestQueueWrapping(t *testing.T) {
 }
 
 func TestQueueLength(t *testing.T) {
-	q := infinitechannel.New()
+	q := infinitechannel.NewQueue()
 
 	if q.Length() != 0 {
 		t.Error("empty queue length not 0")
@@ -64,7 +64,7 @@ func TestQueueLength(t *testing.T) {
 }
 
 func TestQueueGet(t *testing.T) {
-	q := infinitechannel.New()
+	q := infinitechannel.NewQueue()
 
 	for i := 0; i < 1000; i++ {
 		q.Add(i)
@@ -77,7 +77,7 @@ func TestQueueGet(t *testing.T) {
 }
 
 func TestQueueGetNegative(t *testing.T) {
-	q := infinitechannel.New()
+	q := infinitechannel.NewQueue()
 
 	for i := 0; i < 1000; i++ {
 		q.Add(i)
@@ -90,7 +90,7 @@ func TestQueueGetNegative(t *testing.T) {
 }
 
 func TestQueueGetOutOfRangePanics(t *testing.T) {
-	q := infinitechannel.New()
+	q := infinitechannel.NewQueue()
 
 	q.Add(1)
 	q.Add(2)
@@ -106,7 +106,7 @@ func TestQueueGetOutOfRangePanics(t *testing.T) {
 }
 
 func TestQueuePeekOutOfRangePanics(t *testing.T) {
-	q := infinitechannel.New()
+	q := infinitechannel.NewQueue()
 
 	assertPanics(t, "should panic when peeking empty queue", func() {
 		q.Peek()
@@ -121,7 +121,7 @@ func TestQueuePeekOutOfRangePanics(t *testing.T) {
 }
 
 func TestQueueRemoveOutOfRangePanics(t *testing.T) {
-	q := infinitechannel.New()
+	q := infinitechannel.NewQueue()
 
 	assertPanics(t, "should panic when removing empty queue", func() {
 		q.Remove()
@@ -151,7 +151,7 @@ func assertPanics(t *testing.T, name string, f func()) {
 // enough, but if you have less than that available and start swapping, then all bets are off.
 
 func BenchmarkQueueSerial(b *testing.B) {
-	q := infinitechannel.New()
+	q := infinitechannel.NewQueue()
 	for i := 0; i < b.N; i++ {
 		q.Add(nil)
 	}
@@ -162,7 +162,7 @@ func BenchmarkQueueSerial(b *testing.B) {
 }
 
 func BenchmarkQueueGet(b *testing.B) {
-	q := infinitechannel.New()
+	q := infinitechannel.NewQueue()
 	for i := 0; i < b.N; i++ {
 		q.Add(i)
 	}
@@ -173,7 +173,7 @@ func BenchmarkQueueGet(b *testing.B) {
 }
 
 func BenchmarkQueueTickTock(b *testing.B) {
-	q := infinitechannel.New()
+	q := infinitechannel.NewQueue()
 	for i := 0; i < b.N; i++ {
 		q.Add(nil)
 		q.Peek()

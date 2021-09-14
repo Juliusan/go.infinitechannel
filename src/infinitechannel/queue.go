@@ -12,26 +12,32 @@ package infinitechannel
 const MinQueueLen = 16
 
 // Queue represents a single instance of the queue data structure.
-type Queue struct {
+type PriorityQueue struct {
 	buf               []interface{}
 	head, tail, count int
+	priorityFun       func(interface{}) bool
 }
 
 // New constructs and returns a new Queue.
-func New() *Queue {
-	return &Queue{
-		buf: make([]interface{}, MinQueueLen),
+func NewQueue() *PriorityQueue {
+	return NewPriorityQueue(func(interface{}) bool { return false })
+}
+
+func NewPriorityQueue(fun func(interface{}) bool) *PriorityQueue {
+	return &PriorityQueue{
+		buf:         make([]interface{}, MinQueueLen),
+		priorityFun: fun,
 	}
 }
 
 // Length returns the number of elements currently stored in the queue.
-func (q *Queue) Length() int {
+func (q *PriorityQueue) Length() int {
 	return q.count
 }
 
 // resizes the queue to fit exactly twice its current contents
 // this can result in shrinking if the queue is less than half-full
-func (q *Queue) resize() {
+func (q *PriorityQueue) resize() {
 	newBuf := make([]interface{}, q.count<<1)
 
 	if q.tail > q.head {
@@ -46,21 +52,28 @@ func (q *Queue) resize() {
 	q.buf = newBuf
 }
 
-// Add puts an element on the end of the queue.
-func (q *Queue) Add(elem interface{}) {
+// Add puts an element to the start of end of the queue, depending
+// on the result of priorityFun.
+func (q *PriorityQueue) Add(elem interface{}) {
 	if q.count == len(q.buf) {
 		q.resize()
 	}
 
-	q.buf[q.tail] = elem
-	// bitwise modulus
-	q.tail = (q.tail + 1) & (len(q.buf) - 1)
+	priority := q.priorityFun(elem)
+	if priority {
+		q.head = (q.head - 1) & (len(q.buf) - 1)
+		q.buf[q.head] = elem
+	} else {
+		q.buf[q.tail] = elem
+		// bitwise modulus
+		q.tail = (q.tail + 1) & (len(q.buf) - 1)
+	}
 	q.count++
 }
 
 // Peek returns the element at the head of the queue. This call panics
 // if the queue is empty.
-func (q *Queue) Peek() interface{} {
+func (q *PriorityQueue) Peek() interface{} {
 	if q.count <= 0 {
 		panic("queue: Peek() called on empty queue")
 	}
@@ -71,7 +84,7 @@ func (q *Queue) Peek() interface{} {
 // invalid, the call will panic. This method accepts both positive and
 // negative index values. Index 0 refers to the first element, and
 // index -1 refers to the last.
-func (q *Queue) Get(i int) interface{} {
+func (q *PriorityQueue) Get(i int) interface{} {
 	// If indexing backwards, convert to positive index.
 	if i < 0 {
 		i += q.count
@@ -85,7 +98,7 @@ func (q *Queue) Get(i int) interface{} {
 
 // Remove removes and returns the element from the front of the queue. If the
 // queue is empty, the call will panic.
-func (q *Queue) Remove() interface{} {
+func (q *PriorityQueue) Remove() interface{} {
 	if q.count <= 0 {
 		panic("queue: Remove() called on empty queue")
 	}
