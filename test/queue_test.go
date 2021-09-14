@@ -42,6 +42,37 @@ func TestQueueWrapping(t *testing.T) {
 	}
 }
 
+func TestQueuePrioritising(t *testing.T) {
+	q := infinitechannel.NewPriorityQueue(func(i interface{}) bool {
+		return i.(int)%3 == 0
+	})
+
+	for i := 0; i < infinitechannel.MinQueueLen; i++ {
+		q.Add(i)
+	}
+
+	peekAndRemoveFun := func(i int) {
+		if q.Peek().(int) != i {
+			t.Error("peek", i, "had value", q.Peek())
+		}
+		x := q.Remove()
+		if x != i {
+			t.Error("remove", i, "had value", x)
+		}
+	}
+	last3 := infinitechannel.MinQueueLen - 1 - ((infinitechannel.MinQueueLen - 1) % 3)
+	for i := last3; i >= 0; i -= 3 {
+		peekAndRemoveFun(i)
+	}
+	for i := 0; i < last3; i += 3 {
+		peekAndRemoveFun(i + 1)
+		peekAndRemoveFun(i + 2)
+	}
+	for i := last3 + 1; i < infinitechannel.MinQueueLen; i++ {
+		peekAndRemoveFun(i)
+	}
+}
+
 func TestQueueLength(t *testing.T) {
 	q := infinitechannel.NewQueue()
 
