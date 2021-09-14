@@ -1,8 +1,9 @@
-package infinitechannel_test
+package test
 
 import (
-	"github.com/Juliusan/go.infinitechannel/src/infinitechannel"
 	"testing"
+
+	"github.com/Juliusan/go.infinitechannel/src/infinitechannel"
 )
 
 func TestInfiniteChannel(t *testing.T) {

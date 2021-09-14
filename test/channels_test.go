@@ -1,8 +1,9 @@
-package infinitechannel_test
+package test
 
 import (
-	"github.com/Juliusan/go.infinitechannel/src/infinitechannel"
 	"testing"
+
+	"github.com/Juliusan/go.infinitechannel/src/infinitechannel"
 )
 
 // SimpleInChannel is an interface representing a writeable channel that does not necessarily
@@ -34,10 +35,9 @@ type OutChannel interface {
 // Even unbuffered channels can implement this interface by simply returning 0 from Len() and None from Cap().
 type Buffer interface {
 	Len() int // The number of elements currently buffered.
-	Cap() int // The maximum number of elements that can be buffered.
 }
 
-func testChannel(t *testing.T, name string, ch infinitechannel.InfiniteChannel) {
+func testChannel(t *testing.T, name string, ch *infinitechannel.InfiniteChannel) {
 	go func() {
 		for i := 0; i < 1000; i++ {
 			ch.In() <- i
@@ -67,10 +67,10 @@ func testChannelPair(t *testing.T, name string, in InChannel, out OutChannel) {
 	}
 }
 
-func testChannelConcurrentAccessors(t *testing.T, name string, ch infinitechannel.InfiniteChannel) {
+func testChannelConcurrentAccessors(t *testing.T, name string, ch *infinitechannel.InfiniteChannel) {
 	// no asserts here, this is just for the race detector's benefit
 	go ch.Len()
-	go ch.Cap()
+	//go ch.Cap()
 
 	go func() {
 		ch.In() <- nil
