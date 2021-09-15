@@ -5,7 +5,7 @@ build:
 
 build-lint: build lint
 
-test: install
+test: build
 	go test ./... --timeout 30m --count 1 -failfast
 
 install:
