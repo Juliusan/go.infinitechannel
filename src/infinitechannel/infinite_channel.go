@@ -1,10 +1,14 @@
 package infinitechannel
 
+import (
+	"github.com/Juliusan/go.infinitechannel/src/queue"
+)
+
 // InfiniteChannel provides an infinite buffer between the input and the output.
 type InfiniteChannel struct {
 	input, output chan interface{}
 	length        chan int
-	buffer        *PriorityQueue
+	buffer        *queue.PriorityQueue
 }
 
 func NewInfiniteChannel() *InfiniteChannel {
@@ -12,7 +16,7 @@ func NewInfiniteChannel() *InfiniteChannel {
 		input:  make(chan interface{}),
 		output: make(chan interface{}),
 		length: make(chan int),
-		buffer: NewQueue(),
+		buffer: queue.NewDefaultPriorityQueue(),
 	}
 	go ch.infiniteBuffer()
 	return ch
