@@ -8,6 +8,9 @@ build-lint: build lint
 test: build
 	go test ./... --timeout 30m --count 1 -failfast
 
+bench: build
+	go test -bench . ./...
+
 install:
 	go install ./...
 
