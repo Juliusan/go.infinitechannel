@@ -74,7 +74,9 @@ func TestQueuePrioritising(t *testing.T) {
 }
 
 func TestQueueLength(t *testing.T) {
-	q := infinitechannel.NewQueue()
+	q := infinitechannel.NewPriorityQueue(func(i interface{}) bool {
+		return i.(int)%5 >= 3
+	})
 
 	if q.Length() != 0 {
 		t.Error("empty queue length not 0")
@@ -89,32 +91,48 @@ func TestQueueLength(t *testing.T) {
 	for i := 0; i < 1000; i++ {
 		q.Remove()
 		if q.Length() != 1000-i-1 {
-			t.Error("removing: queue with", 1000-i-i, "elements has length", q.Length())
+			t.Error("removing: queue with", 1000-i-1, "elements has length", q.Length())
 		}
 	}
 }
 
 func TestQueueGet(t *testing.T) {
-	q := infinitechannel.NewQueue()
-
+	q := infinitechannel.NewPriorityQueue(func(i interface{}) bool {
+		return i.(int)%2 == 0
+	})
 	for i := 0; i < 1000; i++ {
 		q.Add(i)
 		for j := 0; j < q.Length(); j++ {
-			if q.Get(j).(int) != j {
-				t.Errorf("index %d doesn't contain %d", j, j)
+			var expected int
+			if j <= i/2 {
+				expected = i - i%2 - 2*j
+			} else {
+				expected = -i + i%2 + 2*j - 1
+			}
+			obtained := q.Get(j).(int)
+			if obtained != expected {
+				t.Errorf("iteration %d index %d contains %d instead of %d", i, j, obtained, expected)
 			}
 		}
 	}
 }
 
 func TestQueueGetNegative(t *testing.T) {
-	q := infinitechannel.NewQueue()
-
+	q := infinitechannel.NewPriorityQueue(func(i interface{}) bool {
+		return i.(int)%2 == 0
+	})
 	for i := 0; i < 1000; i++ {
 		q.Add(i)
-		for j := 1; j <= q.Length(); j++ {
-			if q.Get(-j).(int) != q.Length()-j {
-				t.Errorf("index %d doesn't contain %d", -j, q.Length()-j)
+		for j := -1; j >= -q.Length(); j-- {
+			var expected int
+			if j >= -(i+i%2)/2 {
+				expected = i + i%2 + 2*j + 1
+			} else {
+				expected = -i - i%2 - 2*j - 2
+			}
+			obtained := q.Get(j).(int)
+			if obtained != expected {
+				t.Errorf("iteration %d index %d contains %d instead of %d", i, j, obtained, expected)
 			}
 		}
 	}
@@ -180,34 +198,45 @@ func assertPanics(t *testing.T, name string, f func()) {
 // iterations until the benchmarks take a reasonable amount of time to run; memory usage
 // is *NOT* considered. On my machine, these benchmarks hit around ~1GB before they've had
 // enough, but if you have less than that available and start swapping, then all bets are off.
+var q *infinitechannel.PriorityQueue
 
-func BenchmarkQueueSerial(b *testing.B) {
-	q := infinitechannel.NewQueue()
+func BenchmarkQueueAdd10k(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		q.Add(nil)
-	}
-	for i := 0; i < b.N; i++ {
-		q.Peek()
-		q.Remove()
+		b.StopTimer()
+		q = infinitechannel.NewQueue()
+		b.StartTimer()
+
+		for i := 0; i < 10000; i++ {
+			q.Add(i)
+		}
 	}
 }
 
-func BenchmarkQueueGet(b *testing.B) {
-	q := infinitechannel.NewQueue()
-	for i := 0; i < b.N; i++ {
-		q.Add(i)
-	}
+func BenchmarkQueueAdd10kPrioritising(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		q.Get(i)
+		b.StopTimer()
+		q = infinitechannel.NewPriorityQueue(func(i interface{}) bool {
+			return i.(int)%2 == 0
+		})
+		b.StartTimer()
+
+		for i := 0; i < 10000; i++ {
+			q.Add(i)
+		}
 	}
 }
 
-func BenchmarkQueueTickTock(b *testing.B) {
-	q := infinitechannel.NewQueue()
+func BenchmarkQueueRemove10k(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		q.Add(nil)
-		q.Peek()
-		q.Remove()
+		b.StopTimer()
+		q = infinitechannel.NewQueue()
+		for i := 0; i < 10000; i++ {
+			q.Add(i)
+		}
+		b.StartTimer()
+		for i := 0; i < 10000; i++ {
+			q.Remove()
+		}
 	}
 }
