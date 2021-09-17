@@ -6,20 +6,35 @@ import (
 
 // InfiniteChannel provides an infinite buffer between the input and the output.
 type InfiniteChannel struct {
-	input, output chan interface{}
-	length        chan int
-	buffer        *queue.PriorityQueue
+	input  chan interface{}
+	output chan interface{}
+	length chan int
+	buffer queue.Queue
 }
 
 func NewInfiniteChannel() *InfiniteChannel {
-	ch := &InfiniteChannel{
-		input:  make(chan interface{}),
-		output: make(chan interface{}),
-		length: make(chan int),
-		buffer: queue.NewDefaultPriorityQueue(),
-	}
-	go ch.infiniteBuffer()
+	ch := &InfiniteChannel{buffer: queue.NewSimpleQueue()}
+	ch.initInfiniteChannel()
 	return ch
+}
+
+func NewInfiniteDefaultPriorityChannel() *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewDefaultPriorityQueue()}
+	ch.initInfiniteChannel()
+	return ch
+}
+
+func NewInfinitePriorityChannel(fun func(interface{}) bool) *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewPriorityQueue(fun)}
+	ch.initInfiniteChannel()
+	return ch
+}
+
+func (ch *InfiniteChannel) initInfiniteChannel() {
+	ch.input = make(chan interface{})
+	ch.output = make(chan interface{})
+	ch.length = make(chan int)
+	go ch.infiniteBuffer()
 }
 
 func (ch *InfiniteChannel) In() chan<- interface{} {
@@ -33,11 +48,6 @@ func (ch *InfiniteChannel) Out() <-chan interface{} {
 func (ch *InfiniteChannel) Len() int {
 	return <-ch.length
 }
-
-/*
-func (ch *InfiniteChannel) Cap() BufferCap {
-	return Infinity
-}*/
 
 func (ch *InfiniteChannel) Close() {
 	close(ch.input)
