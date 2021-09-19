@@ -7,18 +7,19 @@ import (
 )
 
 func testDefaultQueueSimple(q queue.Queue, t *testing.T) {
-	testQueueSimple(q, 10, func(index int) int { return index }, t)
+	elementsToAdd := 10
+	testQueueSimple(q, elementsToAdd, elementsToAdd, func(index int) int { return index }, t)
 }
 
-func testQueueSimple(q queue.Queue, elementsToAdd int, result func(index int) int, t *testing.T) {
+func testQueueSimple(q queue.Queue, elementsToAdd int, elementsToRemove int, result func(index int) int, t *testing.T) {
 	for i := 0; i < elementsToAdd; i++ {
 		q.Add(i)
 	}
 	obtained := q.Length()
-	if obtained != elementsToAdd {
+	if obtained != elementsToRemove {
 		t.Errorf("expected full queue length %d, obtained %d", elementsToAdd, obtained)
 	}
-	for i := 0; i < elementsToAdd; i++ {
+	for i := 0; i < elementsToRemove; i++ {
 		expected := result(i)
 		obtained = q.Peek().(int)
 		if obtained != expected {
@@ -35,12 +36,15 @@ func testQueueSimple(q queue.Queue, elementsToAdd int, result func(index int) in
 	}
 }
 
+//--
+
 func testDefaultQueueAddRemove(q queue.Queue, t *testing.T) {
+	elementsToAdd := 100
 	elementsToRemoveAdd := 50
-	testQueueAddRemove(q, 100, elementsToRemoveAdd, func(index int) int { return index + elementsToRemoveAdd }, t)
+	testQueueAddRemove(q, elementsToAdd, elementsToRemoveAdd, elementsToAdd, func(index int) int { return index + elementsToRemoveAdd }, t)
 }
 
-func testQueueAddRemove(q queue.Queue, elementsToAdd int, elementsToRemoveAdd int, result func(index int) int, t *testing.T) {
+func testQueueAddRemove(q queue.Queue, elementsToAdd int, elementsToRemoveAdd int, elementsToRemove int, result func(index int) int, t *testing.T) {
 	for i := 0; i < elementsToAdd; i++ {
 		q.Add(i)
 	}
@@ -49,11 +53,11 @@ func testQueueAddRemove(q queue.Queue, elementsToAdd int, elementsToRemoveAdd in
 		q.Add(elementsToAdd + i)
 	}
 	obtained := q.Length()
-	if obtained != elementsToAdd {
+	if obtained != elementsToRemove {
 		t.Errorf("expected full queue length %d, obtained %d", elementsToAdd, obtained)
 	}
 
-	for i := 0; i < elementsToAdd; i++ {
+	for i := 0; i < elementsToRemove; i++ {
 		expected := result(i)
 		obtained = q.Peek().(int)
 		if obtained != expected {
@@ -70,29 +74,43 @@ func testQueueAddRemove(q queue.Queue, elementsToAdd int, elementsToRemoveAdd in
 	}
 }
 
-func testQueueLength(q queue.Queue, t *testing.T) {
+//--
+
+func testDefaultQueueLength(q queue.Queue, t *testing.T) {
+	elementsToAdd := 1000
+	testQueueLength(q, elementsToAdd, elementsToAdd, t)
+}
+
+func testQueueLength(q queue.Queue, elementsToRemoveAdd int, elementsToRemove int, t *testing.T) {
 	obtained := q.Length()
 	if obtained != 0 {
 		t.Errorf("empty queue length is %d", obtained)
 	}
 
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < elementsToRemoveAdd; i++ {
 		q.Add(i)
-		expected := i + 1
+		var expected int
+		if i >= elementsToRemove {
+			expected = elementsToRemove
+		} else {
+			expected = i + 1
+		}
 		obtained := q.Length()
 		if obtained != expected {
 			t.Errorf("adding: expected queue length %d, obtained %d", expected, obtained)
 		}
 	}
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < elementsToRemove; i++ {
 		q.Remove()
-		expected := 1000 - i - 1
+		expected := elementsToRemove - i - 1
 		obtained := q.Length()
 		if obtained != expected {
 			t.Errorf("removing: expected queue length %d, obtained %d", expected, obtained)
 		}
 	}
 }
+
+//--
 
 func testDefaultQueueGet(q queue.Queue, t *testing.T) {
 	testQueueGet(q, 1000, func(iteration int, index int) int { return index }, t)
@@ -111,6 +129,8 @@ func testQueueGet(q queue.Queue, elementsToAdd int, result func(iteration int, i
 	}
 }
 
+//--
+
 func testDefaultQueueGetNegative(q queue.Queue, t *testing.T) {
 	testQueueGetNegative(q, 1000, func(iteration int, index int) int { return iteration + index + 1 }, t)
 }
@@ -128,6 +148,8 @@ func testQueueGetNegative(q queue.Queue, elementsToAdd int, result func(iteratio
 	}
 }
 
+//--
+
 func testQueueGetOutOfRangePanics(q queue.Queue, t *testing.T) {
 	q.Add(1)
 	q.Add(2)
@@ -142,6 +164,8 @@ func testQueueGetOutOfRangePanics(q queue.Queue, t *testing.T) {
 	})
 }
 
+//--
+
 func testQueuePeekOutOfRangePanics(q queue.Queue, t *testing.T) {
 	assertPanics(t, "should panic when peeking empty queue", func() {
 		q.Peek()
@@ -155,6 +179,8 @@ func testQueuePeekOutOfRangePanics(q queue.Queue, t *testing.T) {
 	})
 }
 
+//--
+
 func testQueueRemoveOutOfRangePanics(q queue.Queue, t *testing.T) {
 	assertPanics(t, "should panic when removing empty queue", func() {
 		q.Remove()
@@ -167,6 +193,8 @@ func testQueueRemoveOutOfRangePanics(q queue.Queue, t *testing.T) {
 		q.Remove()
 	})
 }
+
+//--
 
 func assertPanics(t *testing.T, name string, f func()) {
 	defer func() {

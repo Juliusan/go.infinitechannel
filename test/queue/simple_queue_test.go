@@ -15,7 +15,7 @@ func TestSimpleQueueAddRemove(t *testing.T) {
 }
 
 func TestSimpleQueueLength(t *testing.T) {
-	testQueueLength(queue.NewSimpleQueue(), t)
+	testDefaultQueueLength(queue.NewSimpleQueue(), t)
 }
 
 func TestSimpleQueueGet(t *testing.T) {
