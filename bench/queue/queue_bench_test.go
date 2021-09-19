@@ -20,11 +20,17 @@ func benchmarkQueueAdd10k(makeQueueFun func() queue.Queue, b *testing.B) {
 	}
 }
 
-func benchmarkQueueRemove10k(makeQueueFun func() queue.Queue, b *testing.B) {
+//--
+
+func benchmarkDefaultQueueRemove10k(makeQueueFun func() queue.Queue, b *testing.B) {
+	benchmarkQueueRemove10k(makeQueueFun, 10000, b)
+}
+
+func benchmarkQueueRemove10k(makeQueueFun func() queue.Queue, elementsToAdd int, b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
 		q = makeQueueFun()
-		for i := 0; i < 10000; i++ {
+		for i := 0; i < elementsToAdd; i++ {
 			q.Add(i)
 		}
 		b.StartTimer()

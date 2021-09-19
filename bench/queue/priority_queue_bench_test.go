@@ -19,8 +19,10 @@ func BenchmarkPriorityQueueAdd10k(b *testing.B) {
 	benchmarkQueueAdd10k(makeQueueFun, b)
 }
 
+//--
+
 func BenchmarkDefaultPriorityQueueRemove10k(b *testing.B) {
-	benchmarkQueueRemove10k(func() queue.Queue { return queue.NewDefaultPriorityQueue() }, b)
+	benchmarkDefaultQueueRemove10k(func() queue.Queue { return queue.NewDefaultPriorityQueue() }, b)
 }
 
 func BenchmarkPriorityQueueRemove10k(b *testing.B) {
@@ -29,5 +31,5 @@ func BenchmarkPriorityQueueRemove10k(b *testing.B) {
 			return i.(int)%2 == 0
 		})
 	}
-	benchmarkQueueRemove10k(makeQueueFun, b)
+	benchmarkDefaultQueueRemove10k(makeQueueFun, b)
 }
