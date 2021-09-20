@@ -45,6 +45,7 @@ func testInfiniteChannelConcurrentWriteReadLen(ch *infinitechannel.InfiniteChann
 	var wg sync.WaitGroup
 	written := 0
 	read := 0
+	stop := make(chan bool)
 	wg.Add(2)
 
 	go func() {
@@ -72,14 +73,20 @@ func testInfiniteChannelConcurrentWriteReadLen(ch *infinitechannel.InfiniteChann
 
 	go func() {
 		for {
-			length := ch.Len()
-			t.Logf("current channel length is %d", length)
-			// no asserts here - the read/write process is asynchronious
-			time.Sleep(10 * time.Millisecond)
+			select {
+			case <-stop:
+				return
+			default:
+				length := ch.Len()
+				t.Logf("current channel length is %d", length)
+				// no asserts here - the read/write process is asynchronious
+				time.Sleep(10 * time.Millisecond)
+			}
 		}
 	}()
 
 	wg.Wait()
+	stop <- true
 	if written != elementsToWrite {
 		t.Errorf("concurent write written %d should have %d", written, elementsToWrite)
 	}
