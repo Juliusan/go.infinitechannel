@@ -6,15 +6,6 @@ import (
 	"github.com/Juliusan/go.infinitechannel/src/queue"
 )
 
-func testDefaultQueueSimple(q queue.Queue, t *testing.T) {
-	elementsToAdd := 10
-	testQueueSimple(q, elementsToAdd, elementsToAdd, func(index int) int { return index }, t)
-}
-
-func testQueueSimple(q queue.Queue, elementsToAdd int, elementsToRemove int, result func(index int) int, t *testing.T) {
-	testQueueBasicAddLengthPeekRemove(q, elementsToAdd, func(index int) int { return index }, func(index int) bool { return true }, elementsToRemove, result, t)
-}
-
 func testQueueBasicAddLengthPeekRemove(q queue.Queue, elementsToAdd int, add func(index int) int, addResult func(index int) bool, elementsToRemove int, result func(index int) int, t *testing.T) {
 	for i := 0; i < elementsToAdd; i++ {
 		value := add(i)
@@ -44,6 +35,17 @@ func testQueueBasicAddLengthPeekRemove(q queue.Queue, elementsToAdd int, add fun
 	if obtained != 0 {
 		t.Errorf("expected empty queue length 0, obtained %d", obtained)
 	}
+}
+
+//--
+
+func testDefaultQueueSimple(q queue.Queue, t *testing.T) {
+	elementsToAdd := 10
+	testQueueSimple(q, elementsToAdd, elementsToAdd, func(index int) int { return index }, t)
+}
+
+func testQueueSimple(q queue.Queue, elementsToAdd int, elementsToRemove int, result func(index int) int, t *testing.T) {
+	testQueueBasicAddLengthPeekRemove(q, elementsToAdd, func(index int) int { return index }, func(index int) bool { return true }, elementsToRemove, result, t)
 }
 
 //--
