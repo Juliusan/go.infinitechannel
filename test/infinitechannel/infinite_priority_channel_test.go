@@ -7,11 +7,17 @@ import (
 )
 
 func TestInfiniteDefaultPriorityChannelWriteReadLen(t *testing.T) {
-	testInfiniteChannelWriteReadLen(infinitechannel.NewInfiniteDefaultPriorityChannel(), 1000, func(index int) int { return index }, t)
+	testDefaultInfiniteChannelWriteReadLen(infinitechannel.NewInfiniteDefaultPriorityChannel(), 1000, func(index int) int { return index }, t)
 }
 
 func TestInfinitePriorityChannelWriteReadLen(t *testing.T) {
-	ch := infinitechannel.NewInfinitePriorityChannel(func(i interface{}) bool {
+	testInfinitePriorityChannelWriteReadLen(func(fun func(i interface{}) bool) *infinitechannel.InfiniteChannel {
+		return infinitechannel.NewInfinitePriorityChannel(fun)
+	}, t)
+}
+
+func testInfinitePriorityChannelWriteReadLen(makeInfinitePriorityChannelFun func(func(i interface{}) bool) *infinitechannel.InfiniteChannel, t *testing.T) {
+	ch := makeInfinitePriorityChannelFun(func(i interface{}) bool {
 		return i.(int)%3 == 0
 	})
 	result := func(index int) int {
@@ -25,17 +31,25 @@ func TestInfinitePriorityChannelWriteReadLen(t *testing.T) {
 			}
 		}
 	}
-	testInfiniteChannelWriteReadLen(ch, 1000, result, t)
+	testDefaultInfiniteChannelWriteReadLen(ch, 1000, result, t)
 }
+
+//--
 
 func TestInfiniteDefaultPriorityChannelConcurrentWriteReadLen(t *testing.T) {
 	result := func(index int) int { return index }
-	testInfiniteChannelConcurrentWriteReadLen(infinitechannel.NewInfiniteDefaultPriorityChannel(), 1000, &result, t)
+	testDefaultInfiniteChannelConcurrentWriteReadLen(infinitechannel.NewInfiniteDefaultPriorityChannel(), 1000, &result, t)
 }
 
 func TestInfinitePriorityChannelConcurrentWriteReadLen(t *testing.T) {
-	ch := infinitechannel.NewInfinitePriorityChannel(func(i interface{}) bool {
+	testInfinitePriorityChannelConcurrentWriteReadLen(func(fun func(i interface{}) bool) *infinitechannel.InfiniteChannel {
+		return infinitechannel.NewInfinitePriorityChannel(fun)
+	}, t)
+}
+
+func testInfinitePriorityChannelConcurrentWriteReadLen(makeInfinitePriorityChannelFun func(func(i interface{}) bool) *infinitechannel.InfiniteChannel, t *testing.T) {
+	ch := makeInfinitePriorityChannelFun(func(i interface{}) bool {
 		return i.(int)%3 == 0
 	})
-	testInfiniteChannelConcurrentWriteReadLen(ch, 1000, nil, t)
+	testDefaultInfiniteChannelConcurrentWriteReadLen(ch, 1000, nil, t)
 }
