@@ -13,7 +13,9 @@ func testDefaultQueueSimple(q queue.Queue, t *testing.T) {
 
 func testQueueSimple(q queue.Queue, elementsToAdd int, elementsToRemove int, result func(index int) int, t *testing.T) {
 	for i := 0; i < elementsToAdd; i++ {
-		q.Add(i)
+		if !q.Add(i) {
+			t.Errorf("failed to add element %d", i)
+		}
 	}
 	obtained := q.Length()
 	if obtained != elementsToRemove {
@@ -46,11 +48,16 @@ func testDefaultQueueAddRemove(q queue.Queue, t *testing.T) {
 
 func testQueueAddRemove(q queue.Queue, elementsToAdd int, elementsToRemoveAdd int, elementsToRemove int, result func(index int) int, t *testing.T) {
 	for i := 0; i < elementsToAdd; i++ {
-		q.Add(i)
+		if !q.Add(i) {
+			t.Errorf("failed to add element %d", i)
+		}
 	}
 	for i := 0; i < elementsToRemoveAdd; i++ {
 		q.Remove()
-		q.Add(elementsToAdd + i)
+		add := elementsToAdd + i
+		if !q.Add(add) {
+			t.Errorf("failed to add element %d", add)
+		}
 	}
 	obtained := q.Length()
 	if obtained != elementsToRemove {
@@ -88,7 +95,9 @@ func testQueueLength(q queue.Queue, elementsToRemoveAdd int, elementsToRemove in
 	}
 
 	for i := 0; i < elementsToRemoveAdd; i++ {
-		q.Add(i)
+		if !q.Add(i) {
+			t.Errorf("failed to add element %d", i)
+		}
 		var expected int
 		if i >= elementsToRemove {
 			expected = elementsToRemove
@@ -118,7 +127,9 @@ func testDefaultQueueGet(q queue.Queue, t *testing.T) {
 
 func testQueueGet(q queue.Queue, elementsToAdd int, result func(iteration int, index int) int, t *testing.T) {
 	for i := 0; i < elementsToAdd; i++ {
-		q.Add(i)
+		if !q.Add(i) {
+			t.Errorf("failed to add element %d", i)
+		}
 		for j := 0; j < q.Length(); j++ {
 			expected := result(i, j)
 			obtained := q.Get(j).(int)
@@ -137,7 +148,9 @@ func testDefaultQueueGetNegative(q queue.Queue, t *testing.T) {
 
 func testQueueGetNegative(q queue.Queue, elementsToAdd int, result func(iteration int, index int) int, t *testing.T) {
 	for i := 0; i < elementsToAdd; i++ {
-		q.Add(i)
+		if !q.Add(i) {
+			t.Errorf("failed to add element %d", i)
+		}
 		for j := -1; j >= -q.Length(); j-- {
 			expected := result(i, j)
 			obtained := q.Get(j).(int)
@@ -151,9 +164,11 @@ func testQueueGetNegative(q queue.Queue, elementsToAdd int, result func(iteratio
 //--
 
 func testQueueGetOutOfRangePanics(q queue.Queue, t *testing.T) {
-	q.Add(1)
-	q.Add(2)
-	q.Add(3)
+	for i := 0; i < 3; i++ {
+		if !q.Add(i) {
+			t.Errorf("failed to add element %d", i)
+		}
+	}
 
 	assertPanics(t, "should panic when negative index", func() {
 		q.Get(-4)
@@ -171,7 +186,9 @@ func testQueuePeekOutOfRangePanics(q queue.Queue, t *testing.T) {
 		q.Peek()
 	})
 
-	q.Add(1)
+	if !q.Add(0) {
+		t.Errorf("failed to add element 0")
+	}
 	q.Remove()
 
 	assertPanics(t, "should panic when peeking emptied queue", func() {
@@ -186,7 +203,9 @@ func testQueueRemoveOutOfRangePanics(q queue.Queue, t *testing.T) {
 		q.Remove()
 	})
 
-	q.Add(1)
+	if !q.Add(0) {
+		t.Errorf("failed to add element 0")
+	}
 	q.Remove()
 
 	assertPanics(t, "should panic when removing emptied queue", func() {

@@ -45,7 +45,7 @@ func (q *PriorityQueue) resize() {
 
 // Add puts an element to the start of end of the queue, depending
 // on the result of priorityFun.
-func (q *PriorityQueue) Add(elem interface{}) {
+func (q *PriorityQueue) Add(elem interface{}) bool {
 	if q.count == len(q.buf) {
 		q.resize()
 	}
@@ -60,6 +60,7 @@ func (q *PriorityQueue) Add(elem interface{}) {
 		q.tail = (q.tail + 1) & (len(q.buf) - 1)
 	}
 	q.count++
+	return true
 }
 
 // Peek returns the element at the head of the queue. This call panics

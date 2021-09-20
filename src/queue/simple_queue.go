@@ -44,7 +44,7 @@ func (q *SimpleQueue) resize() {
 }
 
 // Add puts an element on the end of the queue.
-func (q *SimpleQueue) Add(elem interface{}) {
+func (q *SimpleQueue) Add(elem interface{}) bool {
 	if q.count == len(q.buf) {
 		q.resize()
 	}
@@ -53,6 +53,7 @@ func (q *SimpleQueue) Add(elem interface{}) {
 	// bitwise modulus
 	q.tail = (q.tail + 1) & (len(q.buf) - 1)
 	q.count++
+	return true
 }
 
 // Peek returns the element at the head of the queue. This call panics

@@ -49,7 +49,7 @@ func (q *LimitedPriorityQueue) Length() int {
 
 // Add puts an element to the start of end of the queue, depending
 // on the result of priorityFun.
-func (q *LimitedPriorityQueue) Add(value interface{}) {
+func (q *LimitedPriorityQueue) Add(value interface{}) bool {
 	priority := q.priorityFun(value)
 	if q.head == nil && q.tail == nil {
 		elem := &LimitedPriorityQueueElem{
@@ -63,11 +63,12 @@ func (q *LimitedPriorityQueue) Add(value interface{}) {
 			q.ptail = elem
 		}
 		q.count++
+		return true
 	} else {
 		limitReached := (q.limit != Infinity) && (q.count >= q.limit)
 		if limitReached && !priority && (q.ptail == q.tail) {
 			//Not possible to add not priority element in queue full of priority elements
-			return
+			return false
 		}
 		elem := &LimitedPriorityQueueElem{value: value}
 		if priority {
@@ -116,6 +117,7 @@ func (q *LimitedPriorityQueue) Add(value interface{}) {
 		} else {
 			q.count++
 		}
+		return true
 	}
 }
 

@@ -6,7 +6,7 @@ const minQueueLen = 16
 
 type Queue interface {
 	Length() int
-	Add(elem interface{})
+	Add(elem interface{}) bool
 	Peek() interface{}
 	Get(i int) interface{}
 	Remove() interface{}
