@@ -152,6 +152,9 @@ func testDefaultQueueGet(q queue.Queue, t *testing.T) {
 }
 
 func testQueueGet(q queue.Queue, elementsToAdd int, result func(iteration int, index int) int, t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping Get test in short mode")
+	}
 	for i := 0; i < elementsToAdd; i++ {
 		if !q.Add(i) {
 			t.Errorf("failed to add element %d", i)
@@ -173,6 +176,9 @@ func testDefaultQueueGetNegative(q queue.Queue, t *testing.T) {
 }
 
 func testQueueGetNegative(q queue.Queue, elementsToAdd int, result func(iteration int, index int) int, t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping GetNegative test in short mode")
+	}
 	for i := 0; i < elementsToAdd; i++ {
 		if !q.Add(i) {
 			t.Errorf("failed to add element %d", i)
