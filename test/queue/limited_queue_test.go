@@ -47,6 +47,87 @@ func TestLimitedPriorityQueueSimple(t *testing.T) {
 
 //--
 
+func TestDefaultLimitedPriorityQueueTwice(t *testing.T) {
+	testDefaultQueueTwice(queue.NewDefaultLimitedPriorityQueue(), t)
+}
+
+func TestPriorityLimitedPriorityQueueTwice(t *testing.T) {
+	testPriorityQueueTwice(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, t)
+}
+
+func TestLimitLimitedPriorityQueueNoLimitTwice(t *testing.T) {
+	testDefaultQueueTwice(queue.NewLimitLimitedPriorityQueue(150), t)
+}
+
+func TestLimitLimitedPriorityQueueTwice(t *testing.T) {
+	limit := 80
+	elementsToAddSingle := 50
+	indexDiff := 2*elementsToAddSingle - limit
+	q := queue.NewLimitLimitedPriorityQueue(limit)
+	addResultFun := func(index int) bool { return true }
+	resultFun := func(index int) int {
+		return (index + indexDiff) % elementsToAddSingle
+	}
+	testQueueTwice(q, elementsToAddSingle, addResultFun, limit, resultFun, t)
+}
+
+func TestLimitedPriorityQueueNoLimitTwice(t *testing.T) {
+	testPriorityQueueTwice(func(fun func(i interface{}) bool) queue.Queue { return queue.NewLimitedPriorityQueue(fun, 150) }, t)
+}
+
+func TestLimitedPriorityQueueTwice(t *testing.T) {
+	limit := 80
+	elementsToAddSingle := 50
+	q := queue.NewLimitedPriorityQueue(func(i interface{}) bool {
+		return i.(int)%3 == 0
+	}, limit)
+	addResultFun := func(index int) bool { return true }
+	resultFun := func(index int) int {
+		if index <= 16 {
+			return 48 - 3*index
+		} else if index <= 33 {
+			return 99 - 3*index
+		} else if index <= 46 {
+			if index%2 == 0 {
+				return 3*index/2 - 20
+			} else {
+				return (3*index - 41) / 2
+			}
+		} else {
+			if index%2 == 1 {
+				return (3*index - 139) / 2
+			} else {
+				return 3*index/2 - 70
+			}
+		}
+	}
+	testQueueTwice(q, elementsToAddSingle, addResultFun, limit, resultFun, t)
+}
+
+//--
+
+func TestLimitedPriorityQueueOverflow(t *testing.T) {
+	limit := 30
+	elementsToAddSingle := 50
+	cutOff := elementsToAddSingle / 2
+	q := queue.NewLimitedPriorityQueue(func(i interface{}) bool {
+		return i.(int) < cutOff
+	}, limit)
+	addResultFun := func(index int) bool {
+		return index < elementsToAddSingle+cutOff
+	}
+	resultFun := func(index int) int {
+		if index < 25 {
+			return 24 - index
+		} else {
+			return 49 - index
+		}
+	}
+	testQueueTwice(q, elementsToAddSingle, addResultFun, limit, resultFun, t)
+}
+
+//--
+
 func TestDefaultLimitedPriorityQueueAddRemove(t *testing.T) {
 	testDefaultQueueAddRemove(queue.NewDefaultLimitedPriorityQueue(), t)
 }

@@ -12,10 +12,18 @@ func testDefaultQueueSimple(q queue.Queue, t *testing.T) {
 }
 
 func testQueueSimple(q queue.Queue, elementsToAdd int, elementsToRemove int, result func(index int) int, t *testing.T) {
+	testQueueBasicAddLengthPeekRemove(q, elementsToAdd, func(index int) int { return index }, func(index int) bool { return true }, elementsToRemove, result, t)
+}
+
+func testQueueBasicAddLengthPeekRemove(q queue.Queue, elementsToAdd int, add func(index int) int, addResult func(index int) bool, elementsToRemove int, result func(index int) int, t *testing.T) {
 	for i := 0; i < elementsToAdd; i++ {
-		if !q.Add(i) {
-			t.Errorf("failed to add element %d", i)
+		value := add(i)
+		expected := addResult(i)
+		obtained := q.Add(value)
+		if obtained != expected {
+			t.Errorf("add result of element %d value %d expected %v obtained %v", i, value, expected, obtained)
 		}
+
 	}
 	obtained := q.Length()
 	if obtained != elementsToRemove {
@@ -36,6 +44,22 @@ func testQueueSimple(q queue.Queue, elementsToAdd int, elementsToRemove int, res
 	if obtained != 0 {
 		t.Errorf("expected empty queue length 0, obtained %d", obtained)
 	}
+}
+
+//--
+
+func testDefaultQueueTwice(q queue.Queue, t *testing.T) {
+	elementsToAddSingle := 50
+	addResultFun := func(index int) bool { return true }
+	resultFun := func(index int) int { return index % elementsToAddSingle }
+	testQueueTwice(q, elementsToAddSingle, addResultFun, 2*elementsToAddSingle, resultFun, t)
+}
+
+func testQueueTwice(q queue.Queue, elementsToAddSingle int, addResult func(index int) bool, elementsToRemove int, result func(index int) int, t *testing.T) {
+	addFun := func(index int) int {
+		return index % elementsToAddSingle
+	}
+	testQueueBasicAddLengthPeekRemove(q, 2*elementsToAddSingle, addFun, addResult, elementsToRemove, result, t)
 }
 
 //--

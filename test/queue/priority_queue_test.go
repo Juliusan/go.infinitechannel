@@ -28,6 +28,44 @@ func testPriorityQueueSimple(makePriorityQueueFun func(func(i interface{}) bool)
 
 //--
 
+func TestDefaultPriorityQueueTwice(t *testing.T) {
+	testDefaultQueueTwice(queue.NewDefaultPriorityQueue(), t)
+}
+
+func TestPriorityQueueTwice(t *testing.T) {
+	testPriorityQueueTwice(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityQueue(fun) }, t)
+}
+
+func testPriorityQueueTwice(makePriorityQueueFun func(func(i interface{}) bool) queue.Queue, t *testing.T) {
+	q := makePriorityQueueFun(func(i interface{}) bool {
+		return i.(int)%3 == 0
+	})
+	elementsToAddSingle := 50
+	addResultFun := func(index int) bool { return true }
+	resultFun := func(index int) int {
+		if index <= 16 {
+			return 48 - 3*index
+		} else if index <= 33 {
+			return 99 - 3*index
+		} else if index <= 66 {
+			if index%2 == 0 {
+				return 3*index/2 - 50
+			} else {
+				return (3*index - 101) / 2
+			}
+		} else {
+			if index%2 == 1 {
+				return (3*index - 199) / 2
+			} else {
+				return 3*index/2 - 100
+			}
+		}
+	}
+	testQueueTwice(q, elementsToAddSingle, addResultFun, 2*elementsToAddSingle, resultFun, t)
+}
+
+//--
+
 func TestDefaultPriorityQueueAddRemove(t *testing.T) {
 	testDefaultQueueAddRemove(queue.NewDefaultPriorityQueue(), t)
 }

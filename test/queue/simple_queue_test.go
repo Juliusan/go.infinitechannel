@@ -10,6 +10,10 @@ func TestSimpleQueueSimple(t *testing.T) {
 	testDefaultQueueSimple(queue.NewSimpleQueue(), t)
 }
 
+func TestSimpleQueueTwice(t *testing.T) {
+	testDefaultQueueTwice(queue.NewSimpleQueue(), t)
+}
+
 func TestSimpleQueueAddRemove(t *testing.T) {
 	testDefaultQueueAddRemove(queue.NewSimpleQueue(), t)
 }
