@@ -11,8 +11,12 @@ func BenchmarkDefaultPriorityQueueAdd10k(b *testing.B) {
 }
 
 func BenchmarkPriorityQueueAdd10k(b *testing.B) {
+	benchmarkPriorityQueueAdd10k(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityQueue(fun) }, b)
+}
+
+func benchmarkPriorityQueueAdd10k(makePriorityQueueFun func(func(i interface{}) bool) queue.Queue, b *testing.B) {
 	makeQueueFun := func() queue.Queue {
-		return queue.NewPriorityQueue(func(i interface{}) bool {
+		return makePriorityQueueFun(func(i interface{}) bool {
 			return i.(int)%2 == 0
 		})
 	}
@@ -26,8 +30,12 @@ func BenchmarkDefaultPriorityQueueRemove10k(b *testing.B) {
 }
 
 func BenchmarkPriorityQueueRemove10k(b *testing.B) {
+	benchmarkPriorityQueueRemove10k(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityQueue(fun) }, b)
+}
+
+func benchmarkPriorityQueueRemove10k(makePriorityQueueFun func(func(i interface{}) bool) queue.Queue, b *testing.B) {
 	makeQueueFun := func() queue.Queue {
-		return queue.NewPriorityQueue(func(i interface{}) bool {
+		return makePriorityQueueFun(func(i interface{}) bool {
 			return i.(int)%2 == 0
 		})
 	}

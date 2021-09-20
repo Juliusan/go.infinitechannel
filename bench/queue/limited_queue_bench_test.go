@@ -11,12 +11,7 @@ func BenchmarkDefaultLimitedPriorityQueueAdd10k(b *testing.B) {
 }
 
 func BenchmarkPriorityLimitedPriorityQueueAdd10k(b *testing.B) {
-	makeQueueFun := func() queue.Queue {
-		return queue.NewPriorityLimitedPriorityQueue(func(i interface{}) bool {
-			return i.(int)%2 == 0
-		})
-	}
-	benchmarkQueueAdd10k(makeQueueFun, b)
+	benchmarkPriorityQueueAdd10k(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, b)
 }
 
 func BenchmarkLimitLimitedPriorityQueueNoLimitAdd10k(b *testing.B) {
@@ -34,12 +29,7 @@ func BenchmarkLimitLimitedPriorityQueueAdd10k(b *testing.B) {
 }
 
 func BenchmarkLimitedPriorityQueueNoLimitAdd10k(b *testing.B) {
-	makeQueueFun := func() queue.Queue {
-		return queue.NewLimitedPriorityQueue(func(i interface{}) bool {
-			return i.(int)%2 == 0
-		}, 12000)
-	}
-	benchmarkQueueAdd10k(makeQueueFun, b)
+	benchmarkPriorityQueueAdd10k(func(fun func(i interface{}) bool) queue.Queue { return queue.NewLimitedPriorityQueue(fun, 12000) }, b)
 }
 
 func BenchmarkLimitedPriorityQueueAdd10k(b *testing.B) {
@@ -58,12 +48,7 @@ func BenchmarkDefaultLimitedPriorityQueueRemove10k(b *testing.B) {
 }
 
 func BenchmarkPriorityLimitedPriorityQueueRemove10k(b *testing.B) {
-	makeQueueFun := func() queue.Queue {
-		return queue.NewPriorityLimitedPriorityQueue(func(i interface{}) bool {
-			return i.(int)%2 == 0
-		})
-	}
-	benchmarkDefaultQueueRemove10k(makeQueueFun, b)
+	benchmarkPriorityQueueRemove10k(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, b)
 }
 
 func BenchmarkLimitLimitedPriorityQueueNoLimitRemove10k(b *testing.B) {
@@ -81,12 +66,7 @@ func BenchmarkLimitLimitedPriorityQueueRemove10k(b *testing.B) {
 }
 
 func BenchmarkLimitedPriorityQueueNoLimitRemove10k(b *testing.B) {
-	makeQueueFun := func() queue.Queue {
-		return queue.NewLimitedPriorityQueue(func(i interface{}) bool {
-			return i.(int)%2 == 0
-		}, 12000)
-	}
-	benchmarkDefaultQueueRemove10k(makeQueueFun, b)
+	benchmarkPriorityQueueRemove10k(func(fun func(i interface{}) bool) queue.Queue { return queue.NewLimitedPriorityQueue(fun, 12000) }, b)
 }
 
 func BenchmarkLimitedPriorityQueueRemove10k(b *testing.B) {
