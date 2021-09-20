@@ -9,13 +9,17 @@ import (
 
 var ch *infinitechannel.InfiniteChannel
 
-func benchmarkInfiniteChannelTransfer10kSerial(makeInfiniteChannelFun func() *infinitechannel.InfiniteChannel, b *testing.B) {
+func benchmarkDefaultInfiniteChannelTransfer10kSerial(makeInfiniteChannelFun func() *infinitechannel.InfiniteChannel, b *testing.B) {
+	benchmarkInfiniteChannelTransfer10kSerial(makeInfiniteChannelFun, 10000, b)
+}
+
+func benchmarkInfiniteChannelTransfer10kSerial(makeInfiniteChannelFun func() *infinitechannel.InfiniteChannel, elementsToWrite int, b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
 		ch = makeInfiniteChannelFun()
 		b.StartTimer()
 
-		for i := 0; i < 10000; i++ {
+		for i := 0; i < elementsToWrite; i++ {
 			ch.In() <- i
 		}
 		for i := 0; i < 10000; i++ {
@@ -24,7 +28,13 @@ func benchmarkInfiniteChannelTransfer10kSerial(makeInfiniteChannelFun func() *in
 	}
 }
 
-func benchmarkInfiniteChannelTransfer10kConcurrent(makeInfiniteChannelFun func() *infinitechannel.InfiniteChannel, b *testing.B) {
+//--
+
+func benchmarkDefaultInfiniteChannelTransfer10kConcurrent(makeInfiniteChannelFun func() *infinitechannel.InfiniteChannel, b *testing.B) {
+	benchmarkInfiniteChannelTransfer10kConcurrent(makeInfiniteChannelFun, 10000, b)
+}
+
+func benchmarkInfiniteChannelTransfer10kConcurrent(makeInfiniteChannelFun func() *infinitechannel.InfiniteChannel, elementsToWrite int, b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
 		var wg sync.WaitGroup
@@ -33,7 +43,7 @@ func benchmarkInfiniteChannelTransfer10kConcurrent(makeInfiniteChannelFun func()
 		b.StartTimer()
 
 		go func() {
-			for i := 0; i < 10000; i++ {
+			for i := 0; i < elementsToWrite; i++ {
 				ch.In() <- i
 			}
 			wg.Done()

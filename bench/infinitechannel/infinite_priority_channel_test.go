@@ -7,27 +7,41 @@ import (
 )
 
 func BenchmarkInfiniteDefaultPriorityChannelTransfer10kSerial(b *testing.B) {
-	benchmarkInfiniteChannelTransfer10kSerial(func() *infinitechannel.InfiniteChannel { return infinitechannel.NewInfiniteDefaultPriorityChannel() }, b)
+	benchmarkDefaultInfiniteChannelTransfer10kSerial(func() *infinitechannel.InfiniteChannel { return infinitechannel.NewInfiniteDefaultPriorityChannel() }, b)
 }
 
 func BenchmarkInfinitePriorityChannelTransfer10kSerial(b *testing.B) {
+	benchmarkInfinitePriorityChannelTransfer10kSerial(func(fun func(i interface{}) bool) *infinitechannel.InfiniteChannel {
+		return infinitechannel.NewInfinitePriorityChannel(fun)
+	}, b)
+}
+
+func benchmarkInfinitePriorityChannelTransfer10kSerial(makeInfinitePriorityChannelFun func(func(i interface{}) bool) *infinitechannel.InfiniteChannel, b *testing.B) {
 	makeInfiniteChannelFun := func() *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfinitePriorityChannel(func(i interface{}) bool {
+		return makeInfinitePriorityChannelFun(func(i interface{}) bool {
 			return i.(int)%2 == 0
 		})
 	}
-	benchmarkInfiniteChannelTransfer10kSerial(makeInfiniteChannelFun, b)
+	benchmarkDefaultInfiniteChannelTransfer10kSerial(makeInfiniteChannelFun, b)
 }
 
+//--
+
 func BenchmarkInfiniteDefaultPriorityChannelTransfer10kConcurrent(b *testing.B) {
-	benchmarkInfiniteChannelTransfer10kConcurrent(func() *infinitechannel.InfiniteChannel { return infinitechannel.NewInfiniteDefaultPriorityChannel() }, b)
+	benchmarkDefaultInfiniteChannelTransfer10kConcurrent(func() *infinitechannel.InfiniteChannel { return infinitechannel.NewInfiniteDefaultPriorityChannel() }, b)
 }
 
 func BenchmarkInfinitePriorityChannelTransfer10kConcurrent(b *testing.B) {
+	benchmarkInfinitePriorityChannelTransfer10kConcurrent(func(fun func(i interface{}) bool) *infinitechannel.InfiniteChannel {
+		return infinitechannel.NewInfinitePriorityChannel(fun)
+	}, b)
+}
+
+func benchmarkInfinitePriorityChannelTransfer10kConcurrent(makeInfinitePriorityChannelFun func(func(i interface{}) bool) *infinitechannel.InfiniteChannel, b *testing.B) {
 	makeInfiniteChannelFun := func() *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfinitePriorityChannel(func(i interface{}) bool {
+		return makeInfinitePriorityChannelFun(func(i interface{}) bool {
 			return i.(int)%2 == 0
 		})
 	}
-	benchmarkInfiniteChannelTransfer10kConcurrent(makeInfiniteChannelFun, b)
+	benchmarkDefaultInfiniteChannelTransfer10kConcurrent(makeInfiniteChannelFun, b)
 }

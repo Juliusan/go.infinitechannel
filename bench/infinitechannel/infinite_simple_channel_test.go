@@ -7,9 +7,9 @@ import (
 )
 
 func BenchmarkInfiniteSimpleChannelTransfer10Serial(b *testing.B) {
-	benchmarkInfiniteChannelTransfer10kSerial(func() *infinitechannel.InfiniteChannel { return infinitechannel.NewInfiniteChannel() }, b)
+	benchmarkDefaultInfiniteChannelTransfer10kSerial(func() *infinitechannel.InfiniteChannel { return infinitechannel.NewInfiniteChannel() }, b)
 }
 
 func BenchmarkInfiniteSimpleChannelTransfer10Concurrent(b *testing.B) {
-	benchmarkInfiniteChannelTransfer10kConcurrent(func() *infinitechannel.InfiniteChannel { return infinitechannel.NewInfiniteChannel() }, b)
+	benchmarkDefaultInfiniteChannelTransfer10kConcurrent(func() *infinitechannel.InfiniteChannel { return infinitechannel.NewInfiniteChannel() }, b)
 }
