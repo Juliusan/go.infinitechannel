@@ -54,6 +54,54 @@ func NewInfiniteLimitedPriorityChannel(fun func(interface{}) bool, limit int) *I
 	return ch
 }
 
+func NewInfiniteDefaultLimitedPriorityHashChannel() *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewDefaultLimitedPriorityHashQueue()}
+	ch.initInfiniteChannel()
+	return ch
+}
+
+func NewInfinitePriorityLimitedPriorityHashChannel(fun func(interface{}) bool) *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewPriorityLimitedPriorityHashQueue(fun)}
+	ch.initInfiniteChannel()
+	return ch
+}
+
+func NewInfiniteLimitLimitedPriorityHashChannel(limit int) *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewLimitLimitedPriorityHashQueue(limit)}
+	ch.initInfiniteChannel()
+	return ch
+}
+
+func NewInfiniteLimitPriorityLimitedPriorityHashChannel(fun func(interface{}) bool, limit int) *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewLimitPriorityLimitedPriorityHashQueue(fun, limit)}
+	ch.initInfiniteChannel()
+	return ch
+}
+
+func NewInfiniteHashLimitedPriorityHashChannel() *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewHashLimitedPriorityHashQueue(true)}
+	ch.initInfiniteChannel()
+	return ch
+}
+
+func NewInfinitePriorityHashLimitedPriorityHashChannel(fun func(interface{}) bool) *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewPriorityHashLimitedPriorityHashQueue(fun, true)}
+	ch.initInfiniteChannel()
+	return ch
+}
+
+func NewInfiniteHashLimitLimitedPriorityHashChannel(limit int) *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewLimitHashLimitedPriorityHashQueue(limit, true)}
+	ch.initInfiniteChannel()
+	return ch
+}
+
+func NewInfiniteLimitedPriorityHashChannel(fun func(interface{}) bool, limit int) *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewLimitedPriorityHashQueue(fun, limit, true)}
+	ch.initInfiniteChannel()
+	return ch
+}
+
 func (ch *InfiniteChannel) initInfiniteChannel() {
 	ch.input = make(chan interface{})
 	ch.output = make(chan interface{})
