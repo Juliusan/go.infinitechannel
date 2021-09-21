@@ -209,6 +209,46 @@ func TestLimitedPriorityHashQueueOverflow(t *testing.T) {
 
 //--
 
+func TestLimitedPriorityHashQueueDuplicates(t *testing.T) {
+	limit := 80
+	elementsToAddFirstIteration := 50
+	q := queue.NewLimitedPriorityHashQueue(func(i interface{}) bool {
+		return i.(int)%3 == 0
+	}, limit, true)
+	addFun := func(index int) int {
+		if index < elementsToAddFirstIteration {
+			return 2 * index
+		} else {
+			return index - elementsToAddFirstIteration
+		}
+	}
+	addResultFun := func(index int) bool {
+		return (index < elementsToAddFirstIteration) || ((index-elementsToAddFirstIteration)%2 == 1)
+	}
+	resultFun := func(index int) int {
+		if index <= 16 {
+			return 99 - 6*index
+		} else if index <= 33 {
+			return 198 - 6*index
+		} else if index <= 46 {
+			if index%2 == 0 {
+				return 3*index - 40
+			} else {
+				return 3*index - 41
+			}
+		} else {
+			if index%2 == 0 {
+				return 3*index - 139
+			} else {
+				return 3*index - 140
+			}
+		}
+	}
+	testQueueBasicAddLengthPeekRemove(q, 3*elementsToAddFirstIteration, addFun, addResultFun, limit, resultFun, t)
+}
+
+//--
+
 func TestDefaultLimitedPriorityHashQueueAddRemove(t *testing.T) {
 	testDefaultQueueAddRemove(queue.NewDefaultLimitedPriorityHashQueue(), t)
 }
