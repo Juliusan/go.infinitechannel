@@ -90,7 +90,7 @@ func NewInfinitePriorityHashLimitedPriorityHashChannel(fun func(interface{}) boo
 	return ch
 }
 
-func NewInfiniteHashLimitLimitedPriorityHashChannel(limit int) *InfiniteChannel {
+func NewInfiniteLimitHashLimitedPriorityHashChannel(limit int) *InfiniteChannel {
 	ch := &InfiniteChannel{buffer: queue.NewLimitHashLimitedPriorityHashQueue(limit, true)}
 	ch.initInfiniteChannel()
 	return ch
