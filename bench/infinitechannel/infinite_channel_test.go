@@ -17,9 +17,13 @@ func benchmarkInfiniteChannelTransfer10kSerial(makeInfiniteChannelFun func() *in
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
 		ch = makeInfiniteChannelFun()
+		moreToWrite := elementsToWrite - 10000
+		for i := 0; i < moreToWrite; i++ {
+			ch.In() <- i
+		}
 		b.StartTimer()
 
-		for i := 0; i < elementsToWrite; i++ {
+		for i := moreToWrite; i < elementsToWrite; i++ {
 			ch.In() <- i
 		}
 		for i := 0; i < 10000; i++ {
@@ -40,10 +44,14 @@ func benchmarkInfiniteChannelTransfer10kConcurrent(makeInfiniteChannelFun func()
 		var wg sync.WaitGroup
 		wg.Add(2)
 		ch = makeInfiniteChannelFun()
+		moreToWrite := elementsToWrite - 10000
+		for i := 0; i < moreToWrite; i++ {
+			ch.In() <- i
+		}
 		b.StartTimer()
 
 		go func() {
-			for i := 0; i < elementsToWrite; i++ {
+			for i := moreToWrite; i < elementsToWrite; i++ {
 				ch.In() <- i
 			}
 			wg.Done()
