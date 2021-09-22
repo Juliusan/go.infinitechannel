@@ -28,7 +28,7 @@ func TestLimitPriorityLimitedPriorityHashQueueNoLimitSimple(t *testing.T) {
 	}, t)
 }
 
-func TestLimitPriorityLimitedPriorityQueueSimple(t *testing.T) {
+func TestLimitPriorityLimitedPriorityHashQueueSimple(t *testing.T) {
 	testLimitedPriorityQueueSimple(func(fun func(i interface{}) bool, limit int) queue.Queue {
 		return queue.NewLimitPriorityLimitedPriorityHashQueue(fun, limit)
 	}, t)
@@ -505,7 +505,7 @@ func TestPriorityLimitedPriorityHashQueueGetOutOfRangePanics(t *testing.T) {
 	testPriorityQueueGetOutOfRangePanics(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityHashQueue(fun) }, t)
 }
 
-func TestLimitLimitedPriorityQueueHashGetOutOfRangePanics(t *testing.T) {
+func TestLimitLimitedPriorityHashQueueGetOutOfRangePanics(t *testing.T) {
 	testLimitLimitedPriorityQueueGetOutOfRangePanics(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityHashQueue(limit) }, t)
 }
 
@@ -525,7 +525,7 @@ func TestPriorityHashLimitedPriorityHashQueueGetOutOfRangePanics(t *testing.T) {
 	}, t)
 }
 
-func TestLimitHashLimitedPriorityQueueHashGetOutOfRangePanics(t *testing.T) {
+func TestLimitHashLimitedPriorityHashQueueGetOutOfRangePanics(t *testing.T) {
 	testLimitLimitedPriorityQueueGetOutOfRangePanics(func(limit int) queue.Queue { return queue.NewLimitHashLimitedPriorityHashQueue(limit, true) }, t)
 }
 
@@ -589,7 +589,7 @@ func TestLimitLimitedPriorityHashQueueRemoveOutOfRangePanics(t *testing.T) {
 	testLimitLimitedPriorityQueueRemoveOutOfRangePanics(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityHashQueue(limit) }, t)
 }
 
-func TestLimitPriorityLimitedPriorityQueueRemoveOutOfRangePanics(t *testing.T) {
+func TestLimitPriorityLimitedPriorityHashQueueRemoveOutOfRangePanics(t *testing.T) {
 	testLimitedPriorityQueueRemoveOutOfRangePanics(func(fun func(i interface{}) bool, limit int) queue.Queue {
 		return queue.NewLimitPriorityLimitedPriorityHashQueue(fun, limit)
 	}, t)

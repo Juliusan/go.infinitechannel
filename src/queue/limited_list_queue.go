@@ -1,58 +1,58 @@
 package queue
 
-type LimitedPriorityQueueElem struct {
+type LimitedPriorityListQueueElem struct {
 	value interface{}
-	next  *LimitedPriorityQueueElem
-	prev  *LimitedPriorityQueueElem
+	next  *LimitedPriorityListQueueElem
+	prev  *LimitedPriorityListQueueElem
 }
 
-// LimittedPriorityQueuePriorityQueue is an improvement of SimpleQueue, which
+// LimitedPriorityQueuePriorityQueue is an improvement of SimpleQueue, which
 // can prioritise elements and limit its growth. When the limit is reached, oldest
 // elements are discarded.
-type LimitedPriorityQueue struct {
-	head        *LimitedPriorityQueueElem
-	ptail       *LimitedPriorityQueueElem
-	tail        *LimitedPriorityQueueElem
+type LimitedPriorityListQueue struct {
+	head        *LimitedPriorityListQueueElem
+	ptail       *LimitedPriorityListQueueElem
+	tail        *LimitedPriorityListQueueElem
 	count       int
 	priorityFun func(interface{}) bool
 	limit       int
 }
 
-var _ Queue = &LimitedPriorityQueue{}
+var _ Queue = &LimitedPriorityListQueue{}
 
 const Infinity = 0
 
 // New constructs and returns a new Queue. Code duplication needed for benchmarks.
-func NewDefaultLimitedPriorityQueue() *LimitedPriorityQueue {
-	return NewLimitLimitedPriorityQueue(Infinity)
+func NewDefaultLimitedPriorityListQueue() *LimitedPriorityListQueue {
+	return NewLimitLimitedPriorityListQueue(Infinity)
 }
 
-func NewPriorityLimitedPriorityQueue(fun func(interface{}) bool) *LimitedPriorityQueue {
-	return NewLimitedPriorityQueue(fun, Infinity)
+func NewPriorityLimitedPriorityListQueue(fun func(interface{}) bool) *LimitedPriorityListQueue {
+	return NewLimitedPriorityListQueue(fun, Infinity)
 }
 
-func NewLimitLimitedPriorityQueue(limit int) *LimitedPriorityQueue {
-	return NewLimitedPriorityQueue(func(interface{}) bool { return false }, limit)
+func NewLimitLimitedPriorityListQueue(limit int) *LimitedPriorityListQueue {
+	return NewLimitedPriorityListQueue(func(interface{}) bool { return false }, limit)
 }
 
-func NewLimitedPriorityQueue(fun func(interface{}) bool, limit int) *LimitedPriorityQueue {
-	return &LimitedPriorityQueue{
+func NewLimitedPriorityListQueue(fun func(interface{}) bool, limit int) *LimitedPriorityListQueue {
+	return &LimitedPriorityListQueue{
 		priorityFun: fun,
 		limit:       limit,
 	}
 }
 
 // Length returns the number of elements currently stored in the queue.
-func (q *LimitedPriorityQueue) Length() int {
+func (q *LimitedPriorityListQueue) Length() int {
 	return q.count
 }
 
 // Add puts an element to the start of end of the queue, depending
 // on the result of priorityFun.
-func (q *LimitedPriorityQueue) Add(value interface{}) bool {
+func (q *LimitedPriorityListQueue) Add(value interface{}) bool {
 	priority := q.priorityFun(value)
 	if q.head == nil && q.tail == nil {
-		elem := &LimitedPriorityQueueElem{
+		elem := &LimitedPriorityListQueueElem{
 			value: value,
 			next:  nil,
 			prev:  nil,
@@ -70,7 +70,7 @@ func (q *LimitedPriorityQueue) Add(value interface{}) bool {
 			//Not possible to add not priority element in queue full of priority elements
 			return false
 		}
-		elem := &LimitedPriorityQueueElem{value: value}
+		elem := &LimitedPriorityListQueueElem{value: value}
 		if priority {
 			elem.next = q.head
 			elem.prev = nil
@@ -86,7 +86,7 @@ func (q *LimitedPriorityQueue) Add(value interface{}) bool {
 			q.tail = elem
 		}
 		if limitReached { //then delete one element
-			var delete *LimitedPriorityQueueElem
+			var delete *LimitedPriorityListQueueElem
 			if priority {
 				//here ptail != nil - at least added [priority] element is present
 				if q.ptail == q.tail {
@@ -123,7 +123,7 @@ func (q *LimitedPriorityQueue) Add(value interface{}) bool {
 
 // Peek returns the element at the head of the queue. This call panics
 // if the queue is empty.
-func (q *LimitedPriorityQueue) Peek() interface{} {
+func (q *LimitedPriorityListQueue) Peek() interface{} {
 	if q.count <= 0 {
 		panic("queue: Peek() called on empty queue")
 	}
@@ -134,7 +134,7 @@ func (q *LimitedPriorityQueue) Peek() interface{} {
 // invalid, the call will panic. This method accepts both positive and
 // negative index values. Index 0 refers to the first element, and
 // index -1 refers to the last.
-func (q *LimitedPriorityQueue) Get(i int) interface{} {
+func (q *LimitedPriorityListQueue) Get(i int) interface{} {
 	// If indexing backwards, convert to positive index.
 	if i < 0 {
 		i += q.count
@@ -152,7 +152,7 @@ func (q *LimitedPriorityQueue) Get(i int) interface{} {
 
 // Remove removes and returns the element from the front of the queue. If the
 // queue is empty, the call will panic.
-func (q *LimitedPriorityQueue) Remove() interface{} {
+func (q *LimitedPriorityListQueue) Remove() interface{} {
 	if q.count <= 0 {
 		panic("queue: Remove() called on empty queue")
 	}

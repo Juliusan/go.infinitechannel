@@ -30,26 +30,26 @@ func NewInfinitePriorityChannel(fun func(interface{}) bool) *InfiniteChannel {
 	return ch
 }
 
-func NewInfiniteDefaultLimitedPriorityChannel() *InfiniteChannel {
-	ch := &InfiniteChannel{buffer: queue.NewDefaultLimitedPriorityQueue()}
+func NewInfiniteDefaultLimitedPriorityListChannel() *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewDefaultLimitedPriorityListQueue()}
 	ch.initInfiniteChannel()
 	return ch
 }
 
-func NewInfinitePriorityLimitedPriorityChannel(fun func(interface{}) bool) *InfiniteChannel {
-	ch := &InfiniteChannel{buffer: queue.NewPriorityLimitedPriorityQueue(fun)}
+func NewInfinitePriorityLimitedPriorityListChannel(fun func(interface{}) bool) *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewPriorityLimitedPriorityListQueue(fun)}
 	ch.initInfiniteChannel()
 	return ch
 }
 
-func NewInfiniteLimitLimitedPriorityChannel(limit int) *InfiniteChannel {
-	ch := &InfiniteChannel{buffer: queue.NewLimitLimitedPriorityQueue(limit)}
+func NewInfiniteLimitLimitedPriorityListChannel(limit int) *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewLimitLimitedPriorityListQueue(limit)}
 	ch.initInfiniteChannel()
 	return ch
 }
 
-func NewInfiniteLimitedPriorityChannel(fun func(interface{}) bool, limit int) *InfiniteChannel {
-	ch := &InfiniteChannel{buffer: queue.NewLimitedPriorityQueue(fun, limit)}
+func NewInfiniteLimitedPriorityListChannel(fun func(interface{}) bool, limit int) *InfiniteChannel {
+	ch := &InfiniteChannel{buffer: queue.NewLimitedPriorityListQueue(fun, limit)}
 	ch.initInfiniteChannel()
 	return ch
 }

@@ -3,9 +3,9 @@ package queue
 // LimitedPriorityHashQueue is an improvement of SimpleQueue, which
 // can prioritise elements, limit its growth and rejects already included elements.
 type LimitedPriorityHashQueue struct {
-	head        *LimitedPriorityQueueElem
-	ptail       *LimitedPriorityQueueElem
-	tail        *LimitedPriorityQueueElem
+	head        *LimitedPriorityListQueueElem
+	ptail       *LimitedPriorityListQueueElem
+	tail        *LimitedPriorityListQueueElem
 	count       int
 	priorityFun func(interface{}) bool
 	limit       int
@@ -75,7 +75,7 @@ func (q *LimitedPriorityHashQueue) Add(value interface{}) bool {
 	}
 	priority := q.priorityFun(value)
 	if q.head == nil && q.tail == nil {
-		elem := &LimitedPriorityQueueElem{
+		elem := &LimitedPriorityListQueueElem{
 			value: value,
 			next:  nil,
 			prev:  nil,
@@ -96,7 +96,7 @@ func (q *LimitedPriorityHashQueue) Add(value interface{}) bool {
 			//Not possible to add not priority element in queue full of priority elements
 			return false
 		}
-		elem := &LimitedPriorityQueueElem{value: value}
+		elem := &LimitedPriorityListQueueElem{value: value}
 		if priority {
 			elem.next = q.head
 			elem.prev = nil
@@ -112,7 +112,7 @@ func (q *LimitedPriorityHashQueue) Add(value interface{}) bool {
 			q.tail = elem
 		}
 		if limitReached { //then delete one element
-			var deleteElem *LimitedPriorityQueueElem
+			var deleteElem *LimitedPriorityListQueueElem
 			if priority {
 				//here ptail != nil - at least added [priority] element is present
 				if q.ptail == q.tail {

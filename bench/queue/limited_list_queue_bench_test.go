@@ -6,16 +6,16 @@ import (
 	"github.com/Juliusan/go.infinitechannel/src/queue"
 )
 
-func BenchmarkDefaultLimitedPriorityQueueAdd10k(b *testing.B) {
-	benchmarkQueueAdd10k(func() queue.Queue { return queue.NewDefaultLimitedPriorityQueue() }, b)
+func BenchmarkDefaultLimitedPriorityListQueueAdd10k(b *testing.B) {
+	benchmarkQueueAdd10k(func() queue.Queue { return queue.NewDefaultLimitedPriorityListQueue() }, b)
 }
 
-func BenchmarkPriorityLimitedPriorityQueueAdd10k(b *testing.B) {
-	benchmarkPriorityQueueAdd10k(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, b)
+func BenchmarkPriorityLimitedPriorityListQueueAdd10k(b *testing.B) {
+	benchmarkPriorityQueueAdd10k(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityListQueue(fun) }, b)
 }
 
-func BenchmarkLimitLimitedPriorityQueueNoLimitAdd10k(b *testing.B) {
-	benchmarkLimitLimitedPriorityQueueNoLimitAdd10k(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, b)
+func BenchmarkLimitLimitedPriorityListQueueNoLimitAdd10k(b *testing.B) {
+	benchmarkLimitLimitedPriorityQueueNoLimitAdd10k(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, b)
 }
 
 func benchmarkLimitLimitedPriorityQueueNoLimitAdd10k(makeLimitedQueueFun func(limit int) queue.Queue, b *testing.B) {
@@ -25,8 +25,8 @@ func benchmarkLimitLimitedPriorityQueueNoLimitAdd10k(makeLimitedQueueFun func(li
 	benchmarkQueueAdd10k(makeQueueFun, b)
 }
 
-func BenchmarkLimitLimitedPriorityQueueAdd10k(b *testing.B) {
-	benchmarkLimitLimitedPriorityQueueAdd10k(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, b)
+func BenchmarkLimitLimitedPriorityListQueueAdd10k(b *testing.B) {
+	benchmarkLimitLimitedPriorityQueueAdd10k(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, b)
 }
 
 func benchmarkLimitLimitedPriorityQueueAdd10k(makeLimitedQueueFun func(limit int) queue.Queue, b *testing.B) {
@@ -36,9 +36,9 @@ func benchmarkLimitLimitedPriorityQueueAdd10k(makeLimitedQueueFun func(limit int
 	benchmarkQueueAdd10k(makeQueueFun, b)
 }
 
-func BenchmarkLimitedPriorityQueueNoLimitAdd10k(b *testing.B) {
+func BenchmarkLimitedPriorityListQueueNoLimitAdd10k(b *testing.B) {
 	benchmarkLimitedPriorityQueueNoLimitAdd10k(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, b)
 }
 
@@ -46,9 +46,9 @@ func benchmarkLimitedPriorityQueueNoLimitAdd10k(makeLimitedPriorityQueueFun func
 	benchmarkPriorityQueueAdd10k(func(fun func(i interface{}) bool) queue.Queue { return makeLimitedPriorityQueueFun(fun, 12000) }, b)
 }
 
-func BenchmarkLimitedPriorityQueueAdd10k(b *testing.B) {
+func BenchmarkLimitedPriorityListQueueAdd10k(b *testing.B) {
 	benchmarkLimitedPriorityQueueAdd10k(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, b)
 }
 
@@ -63,16 +63,16 @@ func benchmarkLimitedPriorityQueueAdd10k(makeLimitedPriorityQueueFun func(fun fu
 
 //--
 
-func BenchmarkDefaultLimitedPriorityQueueRemove10k(b *testing.B) {
-	benchmarkDefaultQueueRemove10k(func() queue.Queue { return queue.NewDefaultLimitedPriorityQueue() }, b)
+func BenchmarkDefaultLimitedPriorityListQueueRemove10k(b *testing.B) {
+	benchmarkDefaultQueueRemove10k(func() queue.Queue { return queue.NewDefaultLimitedPriorityListQueue() }, b)
 }
 
-func BenchmarkPriorityLimitedPriorityQueueRemove10k(b *testing.B) {
-	benchmarkPriorityQueueRemove10k(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, b)
+func BenchmarkPriorityLimitedPriorityListQueueRemove10k(b *testing.B) {
+	benchmarkPriorityQueueRemove10k(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityListQueue(fun) }, b)
 }
 
-func BenchmarkLimitLimitedPriorityQueueNoLimitRemove10k(b *testing.B) {
-	benchmarkLimitLimitedPriorityQueueNoLimitRemove10k(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, b)
+func BenchmarkLimitLimitedPriorityListQueueNoLimitRemove10k(b *testing.B) {
+	benchmarkLimitLimitedPriorityQueueNoLimitRemove10k(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, b)
 }
 
 func benchmarkLimitLimitedPriorityQueueNoLimitRemove10k(makeLimitedQueueFun func(limit int) queue.Queue, b *testing.B) {
@@ -82,8 +82,8 @@ func benchmarkLimitLimitedPriorityQueueNoLimitRemove10k(makeLimitedQueueFun func
 	benchmarkDefaultQueueRemove10k(makeQueueFun, b)
 }
 
-func BenchmarkLimitLimitedPriorityQueueRemove10k(b *testing.B) {
-	benchmarkLimitLimitedPriorityQueueRemove10k(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, b)
+func BenchmarkLimitLimitedPriorityListQueueRemove10k(b *testing.B) {
+	benchmarkLimitLimitedPriorityQueueRemove10k(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, b)
 }
 
 func benchmarkLimitLimitedPriorityQueueRemove10k(makeLimitedQueueFun func(limit int) queue.Queue, b *testing.B) {
@@ -93,9 +93,9 @@ func benchmarkLimitLimitedPriorityQueueRemove10k(makeLimitedQueueFun func(limit 
 	benchmarkQueueRemove10k(makeQueueFun, 12000, b)
 }
 
-func BenchmarkLimitedPriorityQueueNoLimitRemove10k(b *testing.B) {
+func BenchmarkLimitedPriorityListQueueNoLimitRemove10k(b *testing.B) {
 	benchmarkLimitedPriorityQueueNoLimitRemove10k(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, b)
 }
 
@@ -103,9 +103,9 @@ func benchmarkLimitedPriorityQueueNoLimitRemove10k(makeLimitedPriorityQueueFun f
 	benchmarkPriorityQueueRemove10k(func(fun func(i interface{}) bool) queue.Queue { return makeLimitedPriorityQueueFun(fun, 12000) }, b)
 }
 
-func BenchmarkLimitedPriorityQueueRemove10k(b *testing.B) {
+func BenchmarkLimitedPriorityListQueueRemove10k(b *testing.B) {
 	benchmarkLimitedPriorityQueueRemove10k(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, b)
 }
 

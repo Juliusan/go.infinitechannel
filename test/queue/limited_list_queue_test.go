@@ -6,24 +6,24 @@ import (
 	"github.com/Juliusan/go.infinitechannel/src/queue"
 )
 
-func TestDefaultLimitedPriorityQueueSimple(t *testing.T) {
-	testDefaultQueueSimple(queue.NewDefaultLimitedPriorityQueue(), t)
+func TestDefaultLimitedPriorityListQueueSimple(t *testing.T) {
+	testDefaultQueueSimple(queue.NewDefaultLimitedPriorityListQueue(), t)
 }
 
-func TestPriorityLimitedPriorityQueueSimple(t *testing.T) {
-	testPriorityQueueSimple(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, t)
+func TestPriorityLimitedPriorityListQueueSimple(t *testing.T) {
+	testPriorityQueueSimple(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityListQueue(fun) }, t)
 }
 
-func TestLimitLimitedPriorityQueueNoLimitSimple(t *testing.T) {
-	testLimitLimitedPriorityQueueNoLimitSimple(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueueNoLimitSimple(t *testing.T) {
+	testLimitLimitedPriorityQueueNoLimitSimple(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueueNoLimitSimple(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
 	testDefaultQueueSimple(makeLimitedQueueFun(15), t)
 }
 
-func TestLimitLimitedPriorityQueueSimple(t *testing.T) {
-	testLimitLimitedPriorityQueueSimple(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueueSimple(t *testing.T) {
+	testLimitLimitedPriorityQueueSimple(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueueSimple(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
@@ -37,9 +37,9 @@ func testLimitLimitedPriorityQueueSimple(makeLimitedQueueFun func(limit int) que
 	testQueueSimple(q, elementsToAdd, limit, result, t)
 }
 
-func TestLimitedPriorityQueueNoLimitSimple(t *testing.T) {
+func TestLimitedPriorityListQueueNoLimitSimple(t *testing.T) {
 	testLimitedPriorityQueueNoLimitSimple(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -47,9 +47,9 @@ func testLimitedPriorityQueueNoLimitSimple(makeLimitedPriorityQueueFun func(fun 
 	testPriorityQueueSimple(func(fun func(i interface{}) bool) queue.Queue { return makeLimitedPriorityQueueFun(fun, 15) }, t)
 }
 
-func TestLimitedPriorityQueueSimple(t *testing.T) {
+func TestLimitedPriorityListQueueSimple(t *testing.T) {
 	testLimitedPriorityQueueSimple(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -67,24 +67,24 @@ func testLimitedPriorityQueueSimple(makeLimitedPriorityQueueFun func(fun func(i 
 
 //--
 
-func TestDefaultLimitedPriorityQueueTwice(t *testing.T) {
-	testDefaultQueueTwice(queue.NewDefaultLimitedPriorityQueue(), t)
+func TestDefaultLimitedPriorityListQueueTwice(t *testing.T) {
+	testDefaultQueueTwice(queue.NewDefaultLimitedPriorityListQueue(), t)
 }
 
-func TestPriorityLimitedPriorityQueueTwice(t *testing.T) {
-	testPriorityQueueTwice(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, t)
+func TestPriorityLimitedPriorityListQueueTwice(t *testing.T) {
+	testPriorityQueueTwice(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityListQueue(fun) }, t)
 }
 
-func TestLimitLimitedPriorityQueueNoLimitTwice(t *testing.T) {
-	testLimitLimitedPriorityQueueNoLimitTwice(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueueNoLimitTwice(t *testing.T) {
+	testLimitLimitedPriorityQueueNoLimitTwice(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueueNoLimitTwice(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
 	testDefaultQueueTwice(makeLimitedQueueFun(150), t)
 }
 
-func TestLimitLimitedPriorityQueueTwice(t *testing.T) {
-	testLimitLimitedPriorityQueueTwice(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueueTwice(t *testing.T) {
+	testLimitLimitedPriorityQueueTwice(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueueTwice(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
@@ -99,9 +99,9 @@ func testLimitLimitedPriorityQueueTwice(makeLimitedQueueFun func(limit int) queu
 	testQueueTwice(q, elementsToAddSingle, addResultFun, limit, resultFun, t)
 }
 
-func TestLimitedPriorityQueueNoLimitTwice(t *testing.T) {
+func TestLimitedPriorityListQueueNoLimitTwice(t *testing.T) {
 	testLimitedPriorityQueueNoLimitTwice(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -109,9 +109,9 @@ func testLimitedPriorityQueueNoLimitTwice(makeLimitedPriorityQueueFun func(fun f
 	testPriorityQueueTwice(func(fun func(i interface{}) bool) queue.Queue { return makeLimitedPriorityQueueFun(fun, 150) }, t)
 }
 
-func TestLimitedPriorityQueueTwice(t *testing.T) {
+func TestLimitedPriorityListQueueTwice(t *testing.T) {
 	testLimitedPriorityQueueTwice(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -146,9 +146,9 @@ func testLimitedPriorityQueueTwice(makeLimitedPriorityQueueFun func(fun func(i i
 
 //--
 
-func TestLimitedPriorityQueueOverflow(t *testing.T) {
+func TestLimitedPriorityListQueueOverflow(t *testing.T) {
 	testLimitedPriorityQueueOverflow(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -174,24 +174,24 @@ func testLimitedPriorityQueueOverflow(makeLimitedPriorityQueueFun func(fun func(
 
 //--
 
-func TestDefaultLimitedPriorityQueueAddRemove(t *testing.T) {
-	testDefaultQueueAddRemove(queue.NewDefaultLimitedPriorityQueue(), t)
+func TestDefaultLimitedPriorityListQueueAddRemove(t *testing.T) {
+	testDefaultQueueAddRemove(queue.NewDefaultLimitedPriorityListQueue(), t)
 }
 
-func TestPriorityLimitedPriorityQueueAddRemove(t *testing.T) {
-	testPriorityQueueAddRemove(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, t)
+func TestPriorityLimitedPriorityListQueueAddRemove(t *testing.T) {
+	testPriorityQueueAddRemove(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityListQueue(fun) }, t)
 }
 
-func TestLimitLimitedPriorityQueueNoLimitAddRemove(t *testing.T) {
-	testLimitLimitedPriorityQueueNoLimitAddRemove(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueueNoLimitAddRemove(t *testing.T) {
+	testLimitLimitedPriorityQueueNoLimitAddRemove(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueueNoLimitAddRemove(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
 	testDefaultQueueAddRemove(makeLimitedQueueFun(150), t)
 }
 
-func TestLimitLimitedPriorityQueueAddRemove(t *testing.T) {
-	testLimitLimitedPriorityQueueAddRemove(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueueAddRemove(t *testing.T) {
+	testLimitLimitedPriorityQueueAddRemove(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueueAddRemove(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
@@ -206,9 +206,9 @@ func testLimitLimitedPriorityQueueAddRemove(makeLimitedQueueFun func(limit int) 
 	testQueueAddRemove(q, elementsToAdd, elementsToRemoveAdd, limit, result, t)
 }
 
-func TestLimitedPriorityQueueNoLimitAddRemove(t *testing.T) {
+func TestLimitedPriorityListQueueNoLimitAddRemove(t *testing.T) {
 	testLimitedPriorityQueueNoLimitAddRemove(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -216,9 +216,9 @@ func testLimitedPriorityQueueNoLimitAddRemove(makeLimitedPriorityQueueFun func(f
 	testPriorityQueueAddRemove(func(fun func(i interface{}) bool) queue.Queue { return makeLimitedPriorityQueueFun(fun, 150) }, t)
 }
 
-func TestLimitedPriorityQueueAddRemove(t *testing.T) {
+func TestLimitedPriorityListQueueAddRemove(t *testing.T) {
 	testLimitedPriorityQueueAddRemove(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -239,17 +239,17 @@ func testLimitedPriorityQueueAddRemove(makeLimitedPriorityQueueFun func(fun func
 
 //--
 
-func TesDefaultLimitedPriorityQueueLength(t *testing.T) {
-	testDefaultQueueLength(queue.NewDefaultLimitedPriorityQueue(), t)
+func TesDefaultLimitedPriorityListQueueLength(t *testing.T) {
+	testDefaultQueueLength(queue.NewDefaultLimitedPriorityListQueue(), t)
 }
 
-func TestPriorityLimitedPriorityQueueLength(t *testing.T) {
-	testPriorityQueueLength(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, t)
+func TestPriorityLimitedPriorityListQueueLength(t *testing.T) {
+	testPriorityQueueLength(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityListQueue(fun) }, t)
 }
 
-func TestLimitLimitedPriorityQueueNoLimitLength(t *testing.T) {
+func TestLimitLimitedPriorityListQueueNoLimitLength(t *testing.T) {
 	testLimitLimitedPriorityQueueNoLimitLength(func(limit int) queue.Queue {
-		return queue.NewLimitLimitedPriorityQueue(limit)
+		return queue.NewLimitLimitedPriorityListQueue(limit)
 	}, t)
 }
 
@@ -257,9 +257,9 @@ func testLimitLimitedPriorityQueueNoLimitLength(makeLimitedQueueFun func(limit i
 	testDefaultQueueLength(makeLimitedQueueFun(1500), t)
 }
 
-func TestLimitLimitedPriorityQueueLength(t *testing.T) {
+func TestLimitLimitedPriorityListQueueLength(t *testing.T) {
 	testLimitLimitedPriorityQueueLength(func(limit int) queue.Queue {
-		return queue.NewLimitLimitedPriorityQueue(limit)
+		return queue.NewLimitLimitedPriorityListQueue(limit)
 	}, t)
 }
 
@@ -269,9 +269,9 @@ func testLimitLimitedPriorityQueueLength(makeLimitedQueueFun func(limit int) que
 	testQueueLength(q, 1000, limit, t)
 }
 
-func TestLimitedPriorityQueueNoLimitLength(t *testing.T) {
+func TestLimitedPriorityListQueueNoLimitLength(t *testing.T) {
 	testLimitedPriorityQueueNoLimitLength(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -279,9 +279,9 @@ func testLimitedPriorityQueueNoLimitLength(makeLimitedPriorityQueueFun func(fun 
 	testPriorityQueueLength(func(fun func(i interface{}) bool) queue.Queue { return makeLimitedPriorityQueueFun(fun, 1500) }, t)
 }
 
-func TestLimitedPriorityQueueLength(t *testing.T) {
+func TestLimitedPriorityListQueueLength(t *testing.T) {
 	testLimitedPriorityQueueLength(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -295,24 +295,24 @@ func testLimitedPriorityQueueLength(makeLimitedPriorityQueueFun func(fun func(i 
 
 //--
 
-func TestDefaultLimitedPriorityQueueGet(t *testing.T) {
-	testDefaultQueueGet(queue.NewDefaultLimitedPriorityQueue(), t)
+func TestDefaultLimitedPriorityListQueueGet(t *testing.T) {
+	testDefaultQueueGet(queue.NewDefaultLimitedPriorityListQueue(), t)
 }
 
-func TestPriorityLimitedPriorityQueueGet(t *testing.T) {
-	testPriorityQueueGet(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, t)
+func TestPriorityLimitedPriorityListQueueGet(t *testing.T) {
+	testPriorityQueueGet(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityListQueue(fun) }, t)
 }
 
-func TestLimitLimitedPriorityQueueNoLimitGet(t *testing.T) {
-	testLimitLimitedPriorityQueueNoLimitGet(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueueNoLimitGet(t *testing.T) {
+	testLimitLimitedPriorityQueueNoLimitGet(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueueNoLimitGet(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
 	testDefaultQueueGet(makeLimitedQueueFun(1500), t)
 }
 
-func TestLimitLimitedPriorityQueueGet(t *testing.T) {
-	testLimitLimitedPriorityQueueGet(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueueGet(t *testing.T) {
+	testLimitLimitedPriorityQueueGet(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueueGet(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
@@ -328,9 +328,9 @@ func testLimitLimitedPriorityQueueGet(makeLimitedQueueFun func(limit int) queue.
 	testQueueGet(q, 1000, result, t)
 }
 
-func TestLimitedPriorityQueueNoLimitGet(t *testing.T) {
+func TestLimitedPriorityListQueueNoLimitGet(t *testing.T) {
 	testLimitedPriorityQueueNoLimitGet(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -338,9 +338,9 @@ func testLimitedPriorityQueueNoLimitGet(makeLimitedPriorityQueueFun func(fun fun
 	testPriorityQueueGet(func(fun func(i interface{}) bool) queue.Queue { return makeLimitedPriorityQueueFun(fun, 1500) }, t)
 }
 
-func TestLimitedPriorityQueueGet(t *testing.T) {
+func TestLimitedPriorityListQueueGet(t *testing.T) {
 	testLimitedPriorityQueueGet(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -365,33 +365,33 @@ func testLimitedPriorityQueueGet(makeLimitedPriorityQueueFun func(fun func(i int
 
 //--
 
-func TestDefaultLimitedPriorityQueueGetNegative(t *testing.T) {
-	testDefaultQueueGetNegative(queue.NewDefaultLimitedPriorityQueue(), t)
+func TestDefaultLimitedPriorityListQueueGetNegative(t *testing.T) {
+	testDefaultQueueGetNegative(queue.NewDefaultLimitedPriorityListQueue(), t)
 }
 
-func TestPriorityLimitedPriorityQueueGetNegative(t *testing.T) {
-	testPriorityQueueGetNegative(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, t)
+func TestPriorityLimitedPriorityListQueueGetNegative(t *testing.T) {
+	testPriorityQueueGetNegative(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityListQueue(fun) }, t)
 }
 
-func TestLimitLimitedPriorityQueueNoLimitGetNegative(t *testing.T) {
-	testLimitLimitedPriorityQueueNoLimitGetNegative(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueueNoLimitGetNegative(t *testing.T) {
+	testLimitLimitedPriorityQueueNoLimitGetNegative(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueueNoLimitGetNegative(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
 	testDefaultQueueGetNegative(makeLimitedQueueFun(1500), t)
 }
 
-func TestLimitLimitedPriorityQueueGetNegative(t *testing.T) {
-	testLimitLimitedPriorityQueueGetNegative(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueueGetNegative(t *testing.T) {
+	testLimitLimitedPriorityQueueGetNegative(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueueGetNegative(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
 	testDefaultQueueGetNegative(makeLimitedQueueFun(800), t)
 }
 
-func TestLimitedPriorityQueueNoLimitGetNegative(t *testing.T) {
+func TestLimitedPriorityListQueueNoLimitGetNegative(t *testing.T) {
 	testLimitedPriorityQueueNoLimitGetNegative(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -399,9 +399,9 @@ func testLimitedPriorityQueueNoLimitGetNegative(makeLimitedPriorityQueueFun func
 	testPriorityQueueGetNegative(func(fun func(i interface{}) bool) queue.Queue { return makeLimitedPriorityQueueFun(fun, 1500) }, t)
 }
 
-func TestLimitedPriorityQueueGetNegative(t *testing.T) {
+func TestLimitedPriorityListQueueGetNegative(t *testing.T) {
 	testLimitedPriorityQueueGetNegative(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -430,25 +430,25 @@ func testLimitedPriorityQueueGetNegative(makeLimitedPriorityQueueFun func(fun fu
 
 //--
 
-func TestDefaultLimitedPriorityQueueGetOutOfRangePanics(t *testing.T) {
-	testQueueGetOutOfRangePanics(queue.NewDefaultLimitedPriorityQueue(), t)
+func TestDefaultLimitedPriorityListQueueGetOutOfRangePanics(t *testing.T) {
+	testQueueGetOutOfRangePanics(queue.NewDefaultLimitedPriorityListQueue(), t)
 }
 
-func TestPriorityLimitedPriorityQueueGetOutOfRangePanics(t *testing.T) {
-	testPriorityQueueGetOutOfRangePanics(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, t)
+func TestPriorityLimitedPriorityListQueueGetOutOfRangePanics(t *testing.T) {
+	testPriorityQueueGetOutOfRangePanics(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityListQueue(fun) }, t)
 }
 
-func TestLimitLimitedPriorityQueueGetOutOfRangePanics(t *testing.T) {
-	testLimitLimitedPriorityQueueGetOutOfRangePanics(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueueGetOutOfRangePanics(t *testing.T) {
+	testLimitLimitedPriorityQueueGetOutOfRangePanics(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueueGetOutOfRangePanics(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
 	testQueueGetOutOfRangePanics(makeLimitedQueueFun(800), t)
 }
 
-func TestLimitedPriorityQueueGetOutOfRangePanics(t *testing.T) {
+func TestLimitedPriorityListQueueGetOutOfRangePanics(t *testing.T) {
 	testLimitedPriorityQueueGetOutOfRangePanics(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -461,25 +461,25 @@ func testLimitedPriorityQueueGetOutOfRangePanics(makeLimitedPriorityQueueFun fun
 
 //--
 
-func TestDefaultLimitedPriorityQueuePeekOutOfRangePanics(t *testing.T) {
-	testQueuePeekOutOfRangePanics(queue.NewDefaultLimitedPriorityQueue(), t)
+func TestDefaultLimitedPriorityListQueuePeekOutOfRangePanics(t *testing.T) {
+	testQueuePeekOutOfRangePanics(queue.NewDefaultLimitedPriorityListQueue(), t)
 }
 
-func TestPriorityLimitedPriorityQueuePeekOutOfRangePanics(t *testing.T) {
-	testPriorityQueuePeekOutOfRangePanics(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, t)
+func TestPriorityLimitedPriorityListQueuePeekOutOfRangePanics(t *testing.T) {
+	testPriorityQueuePeekOutOfRangePanics(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityListQueue(fun) }, t)
 }
 
-func TestLimitLimitedPriorityQueuePeekOutOfRangePanics(t *testing.T) {
-	testLimitLimitedPriorityQueuePeekOutOfRangePanics(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueuePeekOutOfRangePanics(t *testing.T) {
+	testLimitLimitedPriorityQueuePeekOutOfRangePanics(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueuePeekOutOfRangePanics(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
 	testQueuePeekOutOfRangePanics(makeLimitedQueueFun(800), t)
 }
 
-func TestLimitedPriorityQueuePeekOutOfRangePanics(t *testing.T) {
+func TestLimitedPriorityListQueuePeekOutOfRangePanics(t *testing.T) {
 	testLimitedPriorityQueuePeekOutOfRangePanics(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
@@ -492,25 +492,25 @@ func testLimitedPriorityQueuePeekOutOfRangePanics(makeLimitedPriorityQueueFun fu
 
 //--
 
-func TestDefaultLimitedPriorityQueueRemoveOutOfRangePanics(t *testing.T) {
-	testQueueRemoveOutOfRangePanics(queue.NewDefaultLimitedPriorityQueue(), t)
+func TestDefaultLimitedPriorityListQueueRemoveOutOfRangePanics(t *testing.T) {
+	testQueueRemoveOutOfRangePanics(queue.NewDefaultLimitedPriorityListQueue(), t)
 }
 
-func TestPriorityLimitedPriorityQueueRemoveOutOfRangePanics(t *testing.T) {
-	testPriorityQueueRemoveOutOfRangePanics(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityQueue(fun) }, t)
+func TestPriorityLimitedPriorityListQueueRemoveOutOfRangePanics(t *testing.T) {
+	testPriorityQueueRemoveOutOfRangePanics(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityListQueue(fun) }, t)
 }
 
-func TestLimitLimitedPriorityQueueRemoveOutOfRangePanics(t *testing.T) {
-	testLimitLimitedPriorityQueueRemoveOutOfRangePanics(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityQueue(limit) }, t)
+func TestLimitLimitedPriorityListQueueRemoveOutOfRangePanics(t *testing.T) {
+	testLimitLimitedPriorityQueueRemoveOutOfRangePanics(func(limit int) queue.Queue { return queue.NewLimitLimitedPriorityListQueue(limit) }, t)
 }
 
 func testLimitLimitedPriorityQueueRemoveOutOfRangePanics(makeLimitedQueueFun func(limit int) queue.Queue, t *testing.T) {
 	testQueueRemoveOutOfRangePanics(makeLimitedQueueFun(800), t)
 }
 
-func TestLimitedPriorityQueueRemoveOutOfRangePanics(t *testing.T) {
+func TestLimitedPriorityListQueueRemoveOutOfRangePanics(t *testing.T) {
 	testLimitedPriorityQueueRemoveOutOfRangePanics(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityQueue(fun, limit)
+		return queue.NewLimitedPriorityListQueue(fun, limit)
 	}, t)
 }
 
