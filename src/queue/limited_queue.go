@@ -6,7 +6,7 @@ package queue
 type LimitedPriorityQueue struct {
 	buf         []interface{}
 	head        int
-	ptail       int
+	pend        int
 	tail        int
 	count       int
 	priorityFun func(interface{}) bool
@@ -29,11 +29,22 @@ func NewLimitLimitedPriorityQueue(limit int) *LimitedPriorityQueue {
 }
 
 func NewLimitedPriorityQueue(fun func(interface{}) bool, limit int) *LimitedPriorityQueue {
-	return &LimitedPriorityQueue{
-		buf:         make([]interface{}, minQueueLen),
+	var initBufSize int
+	if (limit != Infinity) && (limit < minQueueLen) {
+		initBufSize = limit
+	} else {
+		initBufSize = minQueueLen
+	}
+	result := &LimitedPriorityQueue{
+		head:        0,
+		pend:        -1,
+		tail:        0,
+		count:       0,
+		buf:         make([]interface{}, initBufSize),
 		priorityFun: fun,
 		limit:       limit,
 	}
+	return result
 }
 
 // Length returns the number of elements currently stored in the queue.
@@ -41,17 +52,23 @@ func (q *LimitedPriorityQueue) Length() int {
 	return q.count
 }
 
+func (q *LimitedPriorityQueue) getIndex(rawIndex int) int {
+	index := rawIndex % len(q.buf)
+	if index < 0 {
+		return index + len(q.buf)
+	}
+	return index
+}
+
 // resizes the queue to fit exactly twice its current contents
 // this can result in shrinking if the queue is less than half-full
-func (q *LimitedPriorityQueue) resize() bool {
-	var newSize int
-	if q.count >= q.limit {
-		return false
-	} else {
-		newSize = q.count << 1
-		if newSize > q.limit {
-			newSize = q.limit
-		}
+func (q *LimitedPriorityQueue) resize() {
+	newSize := q.count << 1
+	if newSize < minQueueLen {
+		newSize = minQueueLen
+	}
+	if (q.limit != Infinity) && (newSize > q.limit) {
+		newSize = q.limit
 	}
 	newBuf := make([]interface{}, newSize)
 
@@ -62,11 +79,12 @@ func (q *LimitedPriorityQueue) resize() bool {
 		copy(newBuf[n:], q.buf[:q.tail])
 	}
 
-	q.ptail = (q.ptail - q.head) % newSize
+	if q.pend >= 0 {
+		q.pend = q.getIndex(q.pend - q.head)
+	}
 	q.head = 0
 	q.tail = q.count
 	q.buf = newBuf
-	return true
 }
 
 // Add puts an element to the start of end of the queue, depending
@@ -74,41 +92,59 @@ func (q *LimitedPriorityQueue) resize() bool {
 func (q *LimitedPriorityQueue) Add(elem interface{}) bool {
 	limitReached := false
 	if q.count == len(q.buf) {
-		limitReached = !q.resize()
+		if (q.limit != Infinity) && (q.count >= q.limit) {
+			limitReached = true
+		} else {
+			q.resize()
+		}
 	}
 	priority := q.priorityFun(elem)
-	if limitReached && !priority && (q.ptail == q.tail) {
+	if limitReached && !priority && (q.pend == q.getIndex(q.tail-1)) {
 		//Not possible to add not priority element in queue full of priority elements
 		return false
 	}
 	if limitReached {
-		if q.ptail > q.head {
-			copy(q.buf[q.head+1:q.ptail+1], q.buf[q.head:q.ptail])
+		if q.pend < 0 {
+			q.head = q.getIndex(q.head + 1)
 		} else {
-			oldHead := q.buf[q.head]
-			if q.ptail > 0 {
-				copy(q.buf[1:q.ptail+1], q.buf[:q.ptail])
+			ptail := q.getIndex(q.pend + 1)
+			if ptail == q.tail {
+				q.tail = q.getIndex(q.tail - 1)
+				q.pend = q.getIndex(q.pend - 1)
+			} else {
+				if ptail > q.head {
+					copy(q.buf[q.head+1:ptail+1], q.buf[q.head:ptail])
+				} else {
+					oldHead := q.buf[q.head]
+					if ptail > 0 {
+						copy(q.buf[1:ptail+1], q.buf[:ptail])
+					}
+					lastIndex := len(q.buf) - 1
+					q.buf[0] = q.buf[lastIndex]
+					if q.head < lastIndex {
+						copy(q.buf[q.head+1:], q.buf[q.head:lastIndex])
+					}
+					q.buf[q.getIndex(q.head+1)] = oldHead
+				}
+				q.pend = q.getIndex(q.pend + 1)
+				q.head = q.getIndex(q.head + 1)
 			}
-			lastIndex := len(q.buf) - 1
-			q.buf[0] = q.buf[lastIndex]
-			if q.head < lastIndex {
-				copy(q.buf[q.head+1:], q.buf[q.head:lastIndex])
-			}
-			q.buf[(q.head+1)%len(q.buf)] = oldHead
 		}
-		q.head = (q.head + 1) % len(q.buf)
-		q.ptail = (q.ptail + 1) % len(q.buf)
 	}
 	if priority {
-		q.head = (q.head - 1) % len(q.buf)
+		q.head = q.getIndex(q.head - 1)
 		q.buf[q.head] = elem
-		q.ptail = (q.ptail + 1) % len(q.buf)
+		if q.pend < 0 {
+			q.pend = q.head
+		}
 	} else {
 		q.buf[q.tail] = elem
 		// bitwise modulus
-		q.tail = (q.tail + 1) % len(q.buf)
+		q.tail = q.getIndex(q.tail + 1)
 	}
-	q.count++
+	if !limitReached {
+		q.count++
+	}
 	return true
 }
 
@@ -145,13 +181,13 @@ func (q *LimitedPriorityQueue) Remove() interface{} {
 	}
 	ret := q.buf[q.head]
 	q.buf[q.head] = nil
-	if q.head == q.ptail {
-		q.head = (q.head + 1) % len(q.buf)
+	if q.head == q.pend {
+		q.pend = -1
 	}
-	q.head = (q.head + 1) % len(q.buf)
+	q.head = q.getIndex(q.head + 1)
 	q.count--
 	// Resize down if buffer 1/4 full.
-	if len(q.buf) > minQueueLen && (q.count<<2) == len(q.buf) {
+	if (len(q.buf) > minQueueLen) && ((q.count<<2) <= len(q.buf)) {
 		q.resize()
 	}
 	return ret
