@@ -170,7 +170,7 @@ func (q *LimitedPriorityQueue) Get(i int) interface{} {
 		panic("queue: Get() called with index out of range")
 	}
 	// bitwise modulus
-	return q.buf[(q.head+i)&(len(q.buf)-1)]
+	return q.buf[q.getIndex(q.head+i)]
 }
 
 // Remove removes and returns the element from the front of the queue. If the
@@ -187,7 +187,7 @@ func (q *LimitedPriorityQueue) Remove() interface{} {
 	q.head = q.getIndex(q.head + 1)
 	q.count--
 	// Resize down if buffer 1/4 full.
-	if (len(q.buf) > minQueueLen) && ((q.count<<2) <= len(q.buf)) {
+	if (len(q.buf) > minQueueLen) && ((q.count << 2) <= len(q.buf)) {
 		q.resize()
 	}
 	return ret
