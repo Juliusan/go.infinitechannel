@@ -55,7 +55,7 @@ func BenchmarkLimitedPriorityQueueAdd10k(b *testing.B) {
 func benchmarkLimitedPriorityQueueAdd10k(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, b *testing.B) {
 	makeQueueFun := func() queue.Queue {
 		return makeLimitedPriorityQueueFun(func(i interface{}) bool {
-			return i.(int)%2 == 0
+			return i.(int)%10 == 0
 		}, 8000)
 	}
 	benchmarkQueueAdd10k(makeQueueFun, b)
@@ -112,7 +112,7 @@ func BenchmarkLimitedPriorityQueueRemove10k(b *testing.B) {
 func benchmarkLimitedPriorityQueueRemove10k(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, b *testing.B) {
 	makeQueueFun := func() queue.Queue {
 		return makeLimitedPriorityQueueFun(func(i interface{}) bool {
-			return i.(int)%2 == 0
+			return i.(int)%10 == 0
 		}, 10000)
 	}
 	benchmarkQueueRemove10k(makeQueueFun, 12000, b)
