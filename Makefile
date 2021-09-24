@@ -12,7 +12,7 @@ test-short: build
 	go test ./... --short --count 1 -failfast
 
 bench: build
-	go test -bench . ./... -run XXX
+	go test -bench . ./... -run XXX -benchmem
 
 install:
 	go install ./...
