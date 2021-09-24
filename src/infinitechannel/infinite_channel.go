@@ -56,6 +56,38 @@ func NewInfiniteLimitedPriorityListChannel(fun func(interface{}) bool, limit int
 	return newInfiniteChannel(queue.NewLimitedPriorityListQueue(fun, limit))
 }
 
+func NewInfiniteDefaultLimitedPriorityHashChannel() *InfiniteChannel {
+	return newInfiniteChannel(queue.NewDefaultLimitedPriorityHashQueue())
+}
+
+func NewInfinitePriorityLimitedPriorityHashChannel(fun func(interface{}) bool) *InfiniteChannel {
+	return newInfiniteChannel(queue.NewPriorityLimitedPriorityHashQueue(fun))
+}
+
+func NewInfiniteLimitLimitedPriorityHashChannel(limit int) *InfiniteChannel {
+	return newInfiniteChannel(queue.NewLimitLimitedPriorityHashQueue(limit))
+}
+
+func NewInfiniteLimitPriorityLimitedPriorityHashChannel(fun func(interface{}) bool, limit int) *InfiniteChannel {
+	return newInfiniteChannel(queue.NewLimitPriorityLimitedPriorityHashQueue(fun, limit))
+}
+
+func NewInfiniteHashLimitedPriorityHashChannel() *InfiniteChannel {
+	return newInfiniteChannel(queue.NewHashLimitedPriorityHashQueue(true))
+}
+
+func NewInfinitePriorityHashLimitedPriorityHashChannel(fun func(interface{}) bool) *InfiniteChannel {
+	return newInfiniteChannel(queue.NewPriorityHashLimitedPriorityHashQueue(fun, true))
+}
+
+func NewInfiniteLimitHashLimitedPriorityHashChannel(limit int) *InfiniteChannel {
+	return newInfiniteChannel(queue.NewLimitHashLimitedPriorityHashQueue(limit, true))
+}
+
+func NewInfiniteLimitedPriorityHashChannel(fun func(interface{}) bool, limit int) *InfiniteChannel {
+	return newInfiniteChannel(queue.NewLimitedPriorityHashQueue(fun, limit, true))
+}
+
 func NewInfiniteDefaultLimitedPriorityHashListChannel() *InfiniteChannel {
 	return newInfiniteChannel(queue.NewDefaultLimitedPriorityHashListQueue())
 }
