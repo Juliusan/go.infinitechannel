@@ -1,8 +1,8 @@
 package queue
 
-// LimitedPriorityHashQueue is an improvement of SimpleQueue, which
+// LimitedPriorityHashListQueue is an improvement of SimpleQueue, which
 // can prioritise elements, limit its growth and rejects already included elements.
-type LimitedPriorityHashQueue struct {
+type LimitedPriorityHashListQueue struct {
 	head        *LimitedPriorityListQueueElem
 	ptail       *LimitedPriorityListQueueElem
 	tail        *LimitedPriorityListQueueElem
@@ -12,38 +12,38 @@ type LimitedPriorityHashQueue struct {
 	hash        *map[interface{}]bool
 }
 
-var _ Queue = &LimitedPriorityHashQueue{}
+var _ Queue = &LimitedPriorityHashListQueue{}
 
 // New constructs and returns a new Queue. Code duplication needed for benchmarks.
-func NewDefaultLimitedPriorityHashQueue() *LimitedPriorityHashQueue {
-	return NewHashLimitedPriorityHashQueue(false)
+func NewDefaultLimitedPriorityHashListQueue() *LimitedPriorityHashListQueue {
+	return NewHashLimitedPriorityHashListQueue(false)
 }
 
-func NewPriorityLimitedPriorityHashQueue(fun func(interface{}) bool) *LimitedPriorityHashQueue {
-	return NewPriorityHashLimitedPriorityHashQueue(fun, false)
+func NewPriorityLimitedPriorityHashListQueue(fun func(interface{}) bool) *LimitedPriorityHashListQueue {
+	return NewPriorityHashLimitedPriorityHashListQueue(fun, false)
 }
 
-func NewLimitLimitedPriorityHashQueue(limit int) *LimitedPriorityHashQueue {
-	return NewLimitHashLimitedPriorityHashQueue(limit, false)
+func NewLimitLimitedPriorityHashListQueue(limit int) *LimitedPriorityHashListQueue {
+	return NewLimitHashLimitedPriorityHashListQueue(limit, false)
 }
 
-func NewLimitPriorityLimitedPriorityHashQueue(fun func(interface{}) bool, limit int) *LimitedPriorityHashQueue {
-	return NewLimitedPriorityHashQueue(fun, limit, false)
+func NewLimitPriorityLimitedPriorityHashListQueue(fun func(interface{}) bool, limit int) *LimitedPriorityHashListQueue {
+	return NewLimitedPriorityHashListQueue(fun, limit, false)
 }
 
-func NewHashLimitedPriorityHashQueue(hashNeeded bool) *LimitedPriorityHashQueue {
-	return NewLimitHashLimitedPriorityHashQueue(Infinity, hashNeeded)
+func NewHashLimitedPriorityHashListQueue(hashNeeded bool) *LimitedPriorityHashListQueue {
+	return NewLimitHashLimitedPriorityHashListQueue(Infinity, hashNeeded)
 }
 
-func NewPriorityHashLimitedPriorityHashQueue(fun func(interface{}) bool, hashNeeded bool) *LimitedPriorityHashQueue {
-	return NewLimitedPriorityHashQueue(fun, Infinity, hashNeeded)
+func NewPriorityHashLimitedPriorityHashListQueue(fun func(interface{}) bool, hashNeeded bool) *LimitedPriorityHashListQueue {
+	return NewLimitedPriorityHashListQueue(fun, Infinity, hashNeeded)
 }
 
-func NewLimitHashLimitedPriorityHashQueue(limit int, hashNeeded bool) *LimitedPriorityHashQueue {
-	return NewLimitedPriorityHashQueue(func(interface{}) bool { return false }, limit, hashNeeded)
+func NewLimitHashLimitedPriorityHashListQueue(limit int, hashNeeded bool) *LimitedPriorityHashListQueue {
+	return NewLimitedPriorityHashListQueue(func(interface{}) bool { return false }, limit, hashNeeded)
 }
 
-func NewLimitedPriorityHashQueue(fun func(interface{}) bool, limit int, hashNeeded bool) *LimitedPriorityHashQueue {
+func NewLimitedPriorityHashListQueue(fun func(interface{}) bool, limit int, hashNeeded bool) *LimitedPriorityHashListQueue {
 	var hash *map[interface{}]bool
 	if hashNeeded {
 		hashT := make(map[interface{}]bool)
@@ -51,7 +51,7 @@ func NewLimitedPriorityHashQueue(fun func(interface{}) bool, limit int, hashNeed
 	} else {
 		hash = nil
 	}
-	return &LimitedPriorityHashQueue{
+	return &LimitedPriorityHashListQueue{
 		priorityFun: fun,
 		limit:       limit,
 		hash:        hash,
@@ -59,13 +59,13 @@ func NewLimitedPriorityHashQueue(fun func(interface{}) bool, limit int, hashNeed
 }
 
 // Length returns the number of elements currently stored in the queue.
-func (q *LimitedPriorityHashQueue) Length() int {
+func (q *LimitedPriorityHashListQueue) Length() int {
 	return q.count
 }
 
 // Add puts an element to the start of end of the queue, depending
 // on the result of priorityFun.
-func (q *LimitedPriorityHashQueue) Add(value interface{}) bool {
+func (q *LimitedPriorityHashListQueue) Add(value interface{}) bool {
 	if q.hash != nil {
 		_, exists := (*(q.hash))[value]
 		if exists {
@@ -155,7 +155,7 @@ func (q *LimitedPriorityHashQueue) Add(value interface{}) bool {
 
 // Peek returns the element at the head of the queue. This call panics
 // if the queue is empty.
-func (q *LimitedPriorityHashQueue) Peek() interface{} {
+func (q *LimitedPriorityHashListQueue) Peek() interface{} {
 	if q.count <= 0 {
 		panic("queue: Peek() called on empty queue")
 	}
@@ -166,7 +166,7 @@ func (q *LimitedPriorityHashQueue) Peek() interface{} {
 // invalid, the call will panic. This method accepts both positive and
 // negative index values. Index 0 refers to the first element, and
 // index -1 refers to the last.
-func (q *LimitedPriorityHashQueue) Get(i int) interface{} {
+func (q *LimitedPriorityHashListQueue) Get(i int) interface{} {
 	// If indexing backwards, convert to positive index.
 	if i < 0 {
 		i += q.count
@@ -184,7 +184,7 @@ func (q *LimitedPriorityHashQueue) Get(i int) interface{} {
 
 // Remove removes and returns the element from the front of the queue. If the
 // queue is empty, the call will panic.
-func (q *LimitedPriorityHashQueue) Remove() interface{} {
+func (q *LimitedPriorityHashListQueue) Remove() interface{} {
 	if q.count <= 0 {
 		panic("queue: Remove() called on empty queue")
 	}
