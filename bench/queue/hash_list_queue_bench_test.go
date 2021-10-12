@@ -11,7 +11,9 @@ func BenchmarkDefaultLimitedPriorityHashListQueueAdd10k(b *testing.B) {
 }
 
 func BenchmarkPriorityLimitedPriorityHashListQueueAdd10k(b *testing.B) {
-	benchmarkPriorityQueueAdd10k(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityHashListQueue(fun) }, b)
+	benchmarkPriorityQueueAdd10k(func(fun func(i interface{}) bool) queue.Queue {
+		return queue.NewPriorityLimitedPriorityHashListQueue(fun)
+	}, b)
 }
 
 func BenchmarkLimitLimitedPriorityHashListQueueNoLimitAdd10k(b *testing.B) {
@@ -35,32 +37,38 @@ func BenchmarkLimitPriorityLimitedPriorityHashListQueueAdd10k(b *testing.B) {
 }
 
 func BenchmarkHashLimitedPriorityHashListQueueAdd10k(b *testing.B) {
-	benchmarkQueueAdd10k(func() queue.Queue { return queue.NewHashLimitedPriorityHashListQueue(true) }, b)
+	hashFun := func(elem interface{}) interface{} { return elem }
+	benchmarkQueueAdd10k(func() queue.Queue { return queue.NewHashLimitedPriorityHashListQueue(&hashFun) }, b)
 }
 
 func BenchmarkPriorityHashLimitedPriorityHashListQueueAdd10k(b *testing.B) {
+	hashFun := func(elem interface{}) interface{} { return elem }
 	benchmarkPriorityQueueAdd10k(func(fun func(i interface{}) bool) queue.Queue {
-		return queue.NewPriorityHashLimitedPriorityHashListQueue(fun, true)
+		return queue.NewPriorityHashLimitedPriorityHashListQueue(fun, &hashFun)
 	}, b)
 }
 
 func BenchmarkLimitHashLimitedPriorityHashListQueueNoLimitAdd10k(b *testing.B) {
-	benchmarkLimitLimitedPriorityQueueNoLimitAdd10k(func(limit int) queue.Queue { return queue.NewLimitHashLimitedPriorityHashListQueue(limit, true) }, b)
+	hashFun := func(elem interface{}) interface{} { return elem }
+	benchmarkLimitLimitedPriorityQueueNoLimitAdd10k(func(limit int) queue.Queue { return queue.NewLimitHashLimitedPriorityHashListQueue(limit, &hashFun) }, b)
 }
 
 func BenchmarkLimitHashLimitedPriorityHashListQueueAdd10k(b *testing.B) {
-	benchmarkLimitLimitedPriorityQueueAdd10k(func(limit int) queue.Queue { return queue.NewLimitHashLimitedPriorityHashListQueue(limit, true) }, b)
+	hashFun := func(elem interface{}) interface{} { return elem }
+	benchmarkLimitLimitedPriorityQueueAdd10k(func(limit int) queue.Queue { return queue.NewLimitHashLimitedPriorityHashListQueue(limit, &hashFun) }, b)
 }
 
 func BenchmarkLimitedPriorityHashListQueueNoLimitAdd10k(b *testing.B) {
+	hashFun := func(elem interface{}) interface{} { return elem }
 	benchmarkLimitedPriorityQueueNoLimitAdd10k(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityHashListQueue(fun, limit, true)
+		return queue.NewLimitedPriorityHashListQueue(fun, limit, &hashFun)
 	}, b)
 }
 
 func BenchmarkLimitedPriorityHashListQueueAdd10k(b *testing.B) {
+	hashFun := func(elem interface{}) interface{} { return elem }
 	benchmarkLimitedPriorityQueueAdd10k(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityHashListQueue(fun, limit, true)
+		return queue.NewLimitedPriorityHashListQueue(fun, limit, &hashFun)
 	}, b)
 }
 
@@ -71,7 +79,9 @@ func BenchmarkDefaultLimitedPriorityHashListQueueRemove10k(b *testing.B) {
 }
 
 func BenchmarkPriorityLimitedPriorityHashListQueueRemove10k(b *testing.B) {
-	benchmarkPriorityQueueRemove10k(func(fun func(i interface{}) bool) queue.Queue { return queue.NewPriorityLimitedPriorityHashListQueue(fun) }, b)
+	benchmarkPriorityQueueRemove10k(func(fun func(i interface{}) bool) queue.Queue {
+		return queue.NewPriorityLimitedPriorityHashListQueue(fun)
+	}, b)
 }
 
 func BenchmarkLimitLimitedPriorityHashListQueueNoLimitRemove10k(b *testing.B) {
@@ -95,31 +105,37 @@ func BenchmarkLimitPriorityLimitedPriorityHashListQueueRemove10k(b *testing.B) {
 }
 
 func BenchmarkHashLimitedPriorityHashListQueueRemove10k(b *testing.B) {
-	benchmarkDefaultQueueRemove10k(func() queue.Queue { return queue.NewHashLimitedPriorityHashListQueue(true) }, b)
+	hashFun := func(elem interface{}) interface{} { return elem }
+	benchmarkDefaultQueueRemove10k(func() queue.Queue { return queue.NewHashLimitedPriorityHashListQueue(&hashFun) }, b)
 }
 
 func BenchmarkPriorityHashLimitedPriorityHashListQueueRemove10k(b *testing.B) {
+	hashFun := func(elem interface{}) interface{} { return elem }
 	benchmarkPriorityQueueRemove10k(func(fun func(i interface{}) bool) queue.Queue {
-		return queue.NewPriorityHashLimitedPriorityHashListQueue(fun, true)
+		return queue.NewPriorityHashLimitedPriorityHashListQueue(fun, &hashFun)
 	}, b)
 }
 
 func BenchmarkLimitHashLimitedPriorityHashListQueueNoLimitRemove10k(b *testing.B) {
-	benchmarkLimitLimitedPriorityQueueNoLimitRemove10k(func(limit int) queue.Queue { return queue.NewLimitHashLimitedPriorityHashListQueue(limit, true) }, b)
+	hashFun := func(elem interface{}) interface{} { return elem }
+	benchmarkLimitLimitedPriorityQueueNoLimitRemove10k(func(limit int) queue.Queue { return queue.NewLimitHashLimitedPriorityHashListQueue(limit, &hashFun) }, b)
 }
 
 func BenchmarkLimitHashLimitedPriorityHashListQueueRemove10k(b *testing.B) {
-	benchmarkLimitLimitedPriorityQueueRemove10k(func(limit int) queue.Queue { return queue.NewLimitHashLimitedPriorityHashListQueue(limit, true) }, b)
+	hashFun := func(elem interface{}) interface{} { return elem }
+	benchmarkLimitLimitedPriorityQueueRemove10k(func(limit int) queue.Queue { return queue.NewLimitHashLimitedPriorityHashListQueue(limit, &hashFun) }, b)
 }
 
 func BenchmarkLimitedPriorityHashListQueueNoLimitRemove10k(b *testing.B) {
+	hashFun := func(elem interface{}) interface{} { return elem }
 	benchmarkLimitedPriorityQueueNoLimitRemove10k(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityHashListQueue(fun, limit, true)
+		return queue.NewLimitedPriorityHashListQueue(fun, limit, &hashFun)
 	}, b)
 }
 
 func BenchmarkLimitedPriorityHashListQueueRemove10k(b *testing.B) {
+	hashFun := func(elem interface{}) interface{} { return elem }
 	benchmarkLimitedPriorityQueueRemove10k(func(fun func(i interface{}) bool, limit int) queue.Queue {
-		return queue.NewLimitedPriorityHashListQueue(fun, limit, true)
+		return queue.NewLimitedPriorityHashListQueue(fun, limit, &hashFun)
 	}, b)
 }

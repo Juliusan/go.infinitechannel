@@ -44,37 +44,37 @@ func BenchmarkInfiniteLimitPriorityLimitedPriorityHashChannelTransfer10kSerial(b
 
 func BenchmarkInfiniteHashLimitedPriorityHashChannelTransfer10kSerial(b *testing.B) {
 	benchmarkDefaultInfiniteChannelTransfer10kSerial(func() *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteHashLimitedPriorityHashChannel()
+		return infinitechannel.NewInfiniteHashLimitedPriorityHashChannel(func(elem interface{}) interface{} { return elem })
 	}, b)
 }
 
 func BenchmarkInfinitePriorityHashLimitedPriorityHashChannelTransfer10kSerial(b *testing.B) {
 	benchmarkInfinitePriorityChannelTransfer10kSerial(func(fun func(i interface{}) bool) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfinitePriorityHashLimitedPriorityHashChannel(fun)
+		return infinitechannel.NewInfinitePriorityHashLimitedPriorityHashChannel(fun, func(elem interface{}) interface{} { return elem })
 	}, b)
 }
 
 func BenchmarkInfiniteLimitHashLimitedPriorityHashChannelNoLimitTransfer10kSerial(b *testing.B) {
 	benchmarkInfiniteLimitLimitedPriorityChannelNoLimitTransfer10kSerial(func(limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit)
+		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit, func(elem interface{}) interface{} { return elem })
 	}, b)
 }
 
 func BenchmarkInfiniteLimitHashLimitedPriorityHashChannelTransfer10kSerial(b *testing.B) {
 	benchmarkInfiniteLimitLimitedPriorityChannelTransfer10kSerial(func(limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit)
+		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit, func(elem interface{}) interface{} { return elem })
 	}, b)
 }
 
 func BenchmarkInfiniteLimitedPriorityHashChannelNoLimitTransfer10kSerial(b *testing.B) {
 	benchmarkInfiniteLimitedPriorityChannelNoLimitTransfer10kSerial(func(fun func(interface{}) bool, limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit)
+		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit, func(elem interface{}) interface{} { return elem })
 	}, b)
 }
 
 func BenchmarkInfiniteLimitedPriorityHashChannelTransfer10kSerial(b *testing.B) {
 	benchmarkInfiniteLimitedPriorityChannelTransfer10kSerial(func(fun func(interface{}) bool, limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit)
+		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit, func(elem interface{}) interface{} { return elem })
 	}, b)
 }
 
@@ -118,36 +118,36 @@ func BenchmarkInfiniteLimitPriorityLimitedPriorityHashChannelTransfer10kConcurre
 
 func BenchmarkInfiniteHashLimitedPriorityHashChannelTransfer10kConcurrent(b *testing.B) {
 	benchmarkDefaultInfiniteChannelTransfer10kConcurrent(func() *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteHashLimitedPriorityHashChannel()
+		return infinitechannel.NewInfiniteHashLimitedPriorityHashChannel(func(elem interface{}) interface{} { return elem })
 	}, b)
 }
 
 func BenchmarkInfinitePriorityHashLimitedPriorityHashChannelTransfer10kConcurrent(b *testing.B) {
 	benchmarkInfinitePriorityChannelTransfer10kConcurrent(func(fun func(i interface{}) bool) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfinitePriorityHashLimitedPriorityHashChannel(fun)
+		return infinitechannel.NewInfinitePriorityHashLimitedPriorityHashChannel(fun, func(elem interface{}) interface{} { return elem })
 	}, b)
 }
 
 func BenchmarkInfiniteLimitHashLimitedPriorityHashChannelNoLimitTransfer10kConcurrent(b *testing.B) {
 	benchmarkInfiniteLimitLimitedPriorityChannelNoLimitTransfer10kConcurrent(func(limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit)
+		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit, func(elem interface{}) interface{} { return elem })
 	}, b)
 }
 
 func BenchmarkInfiniteLimitHashLimitedPriorityHashChannelTransfer10kConcurrent(b *testing.B) {
 	benchmarkInfiniteLimitLimitedPriorityChannelTransfer10kConcurrent(func(limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit)
+		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit, func(elem interface{}) interface{} { return elem })
 	}, b)
 }
 
 func BenchmarkInfiniteLimitedPriorityHashChannelNoLimitTransfer10kConcurrent(b *testing.B) {
 	benchmarkInfiniteLimitedPriorityChannelNoLimitTransfer10kConcurrent(func(fun func(interface{}) bool, limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit)
+		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit, func(elem interface{}) interface{} { return elem })
 	}, b)
 }
 
 func BenchmarkInfiniteLimitedPriorityHashChannelTransfer10kConcurrent(b *testing.B) {
 	benchmarkInfiniteLimitedPriorityChannelTransfer10kConcurrent(func(fun func(interface{}) bool, limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit)
+		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit, func(elem interface{}) interface{} { return elem })
 	}, b)
 }
