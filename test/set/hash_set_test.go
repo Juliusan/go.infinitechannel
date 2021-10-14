@@ -1,4 +1,4 @@
-package queue_test
+package set_test
 
 import (
 	"testing"
