@@ -38,7 +38,7 @@ func TestHashSetSimple(t *testing.T) {
 	for i := 0; i < len(addResults); i++ {
 		addResults[i] = true
 	}
-	testHashSetSizeAddContainsRemove(t, testElems, addResults, func(i int) int { return i })
+	testHashSetCreateSizeAddContainsRemove(t, testElems, addResults, func(i int) int { return i })
 }
 
 func TestHashSetCollisions(t *testing.T) {
@@ -56,7 +56,7 @@ func TestHashSetCollisions(t *testing.T) {
 	for i := 0; i < len(addResults); i++ {
 		addResults[i] = true
 	}
-	testHashSetSizeAddContainsRemove(t, testElems, addResults, func(i int) int { return i })
+	testHashSetCreateSizeAddContainsRemove(t, testElems, addResults, func(i int) int { return i })
 }
 
 func TestHashSetDuplicates(t *testing.T) {
@@ -78,7 +78,7 @@ func TestHashSetDuplicates(t *testing.T) {
 		true,
 		true,
 	}
-	testHashSetSizeAddContainsRemove(t, testElems, addResults, func(i int) int { return i })
+	testHashSetCreateSizeAddContainsRemove(t, testElems, addResults, func(i int) int { return i })
 }
 
 func TestHashSetReverse(t *testing.T) {
@@ -100,7 +100,7 @@ func TestHashSetReverse(t *testing.T) {
 		true,
 		true,
 	}
-	testHashSetSizeAddContainsRemove(t, testElems, addResults, func(i int) int { return len(testElems) - i - 1 })
+	testHashSetCreateSizeAddContainsRemove(t, testElems, addResults, func(i int) int { return len(testElems) - i - 1 })
 }
 
 func TestHashSetRandom(t *testing.T) {
@@ -123,11 +123,48 @@ func TestHashSetRandom(t *testing.T) {
 		true,
 	}
 	removeOrder := []int{5, 2, 6, 3, 4, 0, 1}
-	testHashSetSizeAddContainsRemove(t, testElems, addResults, func(i int) int { return removeOrder[i] })
+	testHashSetCreateSizeAddContainsRemove(t, testElems, addResults, func(i int) int { return removeOrder[i] })
 }
 
-func testHashSetSizeAddContainsRemove(t *testing.T, testElems []*TestElem, addResults []bool, removeOrderFun func(int) int) {
+func TestHashSetDouble(t *testing.T) {
+	testElems := []*TestElem{
+		&TestElem{1, 2, 3},
+		&TestElem{4, 5, 6},
+		&TestElem{7, 8, 9},
+		&TestElem{1, 2, 3},
+		&TestElem{1, 2, 4},
+		&TestElem{1, 3, 5},
+		&TestElem{4, 5, 5},
+		&TestElem{6, 7, 8},
+		&TestElem{1, 4, 7},
+		&TestElem{1, 2, 0},
+	}
+	addResults := []bool{
+		true,
+		true,
+		true,
+		false,
+		false,
+		true,
+		false,
+		true,
+		true,
+		false,
+	}
 	hs := set.NewHashSet()
+	randomRemoveOrder := []int{7, 4, 2, 9, 5, 6, 0, 3, 1, 8}
+	testHashSetSizeAddContainsRemove(t, hs, testElems, addResults, func(i int) int { return i })
+	testHashSetSizeAddContainsRemove(t, hs, testElems, addResults, func(i int) int { return len(testElems) - i - 1 })
+	testHashSetSizeAddContainsRemove(t, hs, testElems, addResults, func(i int) int { return randomRemoveOrder[i] })
+	testHashSetSizeAddContainsRemove(t, hs, testElems, addResults, func(i int) int { return i })
+}
+
+func testHashSetCreateSizeAddContainsRemove(t *testing.T, testElems []*TestElem, addResults []bool, removeOrderFun func(int) int) {
+	hs := set.NewHashSet()
+	testHashSetSizeAddContainsRemove(t, hs, testElems, addResults, removeOrderFun)
+}
+
+func testHashSetSizeAddContainsRemove(t *testing.T, hs *set.HashSet, testElems []*TestElem, addResults []bool, removeOrderFun func(int) int) {
 	expectedSize := 0
 	size := hs.Size()
 	if size != expectedSize {
