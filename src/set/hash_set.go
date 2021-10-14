@@ -1,13 +1,5 @@
 package set
 
-type Hashable interface {
-	//For requirements of this function see https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode--
-	//Additional requirement: the returned value must be valid as a map key
-	GetHash() interface{}
-	//For requirements of this function see https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals-java.lang.Object-
-	Equals(elem interface{}) bool
-}
-
 type HashSet struct {
 	hashTable map[interface{}][]Hashable
 	count     int
