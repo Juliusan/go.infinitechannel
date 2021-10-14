@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/Juliusan/go.infinitechannel/src/infinitechannel"
+	"github.com/Juliusan/go.infinitechannel/src/util"
 )
 
 var ch *infinitechannel.InfiniteChannel
@@ -19,12 +20,12 @@ func benchmarkInfiniteChannelTransfer10kSerial(makeInfiniteChannelFun func() *in
 		ch = makeInfiniteChannelFun()
 		moreToWrite := elementsToWrite - 10000
 		for i := 0; i < moreToWrite; i++ {
-			ch.In() <- i
+			ch.In() <- util.SimpleHashable(i)
 		}
 		b.StartTimer()
 
 		for i := moreToWrite; i < elementsToWrite; i++ {
-			ch.In() <- i
+			ch.In() <- util.SimpleHashable(i)
 		}
 		for i := 0; i < 10000; i++ {
 			<-ch.Out()
@@ -46,13 +47,13 @@ func benchmarkInfiniteChannelTransfer10kConcurrent(makeInfiniteChannelFun func()
 		ch = makeInfiniteChannelFun()
 		moreToWrite := elementsToWrite - 10000
 		for i := 0; i < moreToWrite; i++ {
-			ch.In() <- i
+			ch.In() <- util.SimpleHashable(i)
 		}
 		b.StartTimer()
 
 		go func() {
 			for i := moreToWrite; i < elementsToWrite; i++ {
-				ch.In() <- i
+				ch.In() <- util.SimpleHashable(i)
 			}
 			wg.Done()
 		}()

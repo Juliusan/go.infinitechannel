@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/Juliusan/go.infinitechannel/src/infinitechannel"
+	"github.com/Juliusan/go.infinitechannel/src/util"
 )
 
 func BenchmarkInfiniteDefaultLimitedPriorityChannelTransfer10kSerial(b *testing.B) {
@@ -62,9 +63,7 @@ func BenchmarkInfiniteLimitedPriorityChannelTransfer10kSerial(b *testing.B) {
 
 func benchmarkInfiniteLimitedPriorityChannelTransfer10kSerial(makeLimitedPriorityChannelFun func(fun func(interface{}) bool, limit int) *infinitechannel.InfiniteChannel, b *testing.B) {
 	makeInfiniteChannelFun := func() *infinitechannel.InfiniteChannel {
-		return makeLimitedPriorityChannelFun(func(i interface{}) bool {
-			return i.(int)%10 == 0
-		}, 10000)
+		return makeLimitedPriorityChannelFun(util.PriorityFunMod10, 10000)
 	}
 	benchmarkInfiniteChannelTransfer10kSerial(makeInfiniteChannelFun, 12000, b)
 }
@@ -127,9 +126,7 @@ func BenchmarkInfiniteLimitedPriorityChannelTransfer10kConcurrent(b *testing.B) 
 
 func benchmarkInfiniteLimitedPriorityChannelTransfer10kConcurrent(makeLimitedPriorityChannelFun func(fun func(interface{}) bool, limit int) *infinitechannel.InfiniteChannel, b *testing.B) {
 	makeInfiniteChannelFun := func() *infinitechannel.InfiniteChannel {
-		return makeLimitedPriorityChannelFun(func(i interface{}) bool {
-			return i.(int)%10 == 0
-		}, 10000)
+		return makeLimitedPriorityChannelFun(util.PriorityFunMod10, 10000)
 	}
 	benchmarkInfiniteChannelTransfer10kConcurrent(makeInfiniteChannelFun, 12000, b)
 }

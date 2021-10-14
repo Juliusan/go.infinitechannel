@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Juliusan/go.infinitechannel/src/infinitechannel"
+	"github.com/Juliusan/go.infinitechannel/src/util"
 )
 
 func testDefaultInfiniteChannelWriteReadLen(ch *infinitechannel.InfiniteChannel, elementsToWrite int, result func(index int) int, t *testing.T) {
@@ -14,21 +15,21 @@ func testDefaultInfiniteChannelWriteReadLen(ch *infinitechannel.InfiniteChannel,
 
 func testInfiniteChannelWriteReadLen(ch *infinitechannel.InfiniteChannel, elementsToWrite int, elementsToRead int, result func(index int) int, t *testing.T) {
 	for i := 0; i < elementsToWrite; i++ {
-		ch.In() <- i
+		ch.In() <- util.SimpleHashable(i)
 	}
-	obtained := ch.Len()
-	if obtained != elementsToRead {
-		t.Errorf("expected full channel length %d, obtained %d", elementsToWrite, obtained)
+	obtainedLength := ch.Len()
+	if obtainedLength != elementsToRead {
+		t.Errorf("expected full channel length %d, obtained %d", elementsToWrite, obtainedLength)
 	}
 	ch.Close()
-	obtained = ch.Len()
-	if obtained != elementsToRead {
-		t.Errorf("expected closed channel length %d, obtained %d", elementsToWrite, obtained)
+	obtainedLength = ch.Len()
+	if obtainedLength != elementsToRead {
+		t.Errorf("expected closed channel length %d, obtained %d", elementsToWrite, obtainedLength)
 	}
 	for i := 0; i < elementsToRead; i++ {
 		val := <-ch.Out()
-		expected := result(i)
-		obtained := val.(int)
+		expected := util.SimpleHashable(result(i))
+		obtained := val.(util.SimpleHashable)
 		if obtained != expected {
 			t.Errorf("read %d obtained %d instead of %d", i, obtained, expected)
 		}
@@ -50,7 +51,7 @@ func testInfiniteChannelConcurrentWriteReadLen(ch *infinitechannel.InfiniteChann
 
 	go func() {
 		for i := 0; i < elementsToWrite; i++ {
-			ch.In() <- i
+			ch.In() <- util.SimpleHashable(i)
 			written++
 		}
 		wg.Done()
@@ -60,8 +61,8 @@ func testInfiniteChannelConcurrentWriteReadLen(ch *infinitechannel.InfiniteChann
 		for i := 0; i < elementsToRead; i++ {
 			val := <-ch.Out()
 			if result != nil {
-				expected := (*result)(i)
-				obtained := val.(int)
+				expected := util.SimpleHashable((*result)(i))
+				obtained := val.(util.SimpleHashable)
 				if obtained != expected {
 					t.Errorf("concurent read %d obtained %d instead of %d", i, obtained, expected)
 				}

@@ -1,5 +1,7 @@
 package queue
 
+import "github.com/Juliusan/go.infinitechannel/src/set"
+
 // LimitedPriorityHashQueue is an improvement of SimpleQueue, which
 // can prioritise elements, limit its growth and rejects already included elements.
 type LimitedPriorityHashQueue struct {
@@ -10,57 +12,52 @@ type LimitedPriorityHashQueue struct {
 	count       int
 	priorityFun func(interface{}) bool
 	limit       int
-	hash        *map[interface{}]bool
-	hashFun     func(interface{}) interface{}
+	hashTable   set.Set
 }
 
 var _ Queue = &LimitedPriorityHashQueue{}
 
 // New constructs and returns a new Queue. Code duplication needed for benchmarks.
 func NewDefaultLimitedPriorityHashQueue() *LimitedPriorityHashQueue {
-	return NewHashLimitedPriorityHashQueue(nil)
+	return NewHashLimitedPriorityHashQueue(false)
 }
 
 func NewPriorityLimitedPriorityHashQueue(fun func(interface{}) bool) *LimitedPriorityHashQueue {
-	return NewPriorityHashLimitedPriorityHashQueue(fun, nil)
+	return NewPriorityHashLimitedPriorityHashQueue(fun, false)
 }
 
 func NewLimitLimitedPriorityHashQueue(limit int) *LimitedPriorityHashQueue {
-	return NewLimitHashLimitedPriorityHashQueue(limit, nil)
+	return NewLimitHashLimitedPriorityHashQueue(limit, false)
 }
 
 func NewLimitPriorityLimitedPriorityHashQueue(fun func(interface{}) bool, limit int) *LimitedPriorityHashQueue {
-	return NewLimitedPriorityHashQueue(fun, limit, nil)
+	return NewLimitedPriorityHashQueue(fun, limit, false)
 }
 
-func NewHashLimitedPriorityHashQueue(hashNeededFun *func(interface{}) interface{}) *LimitedPriorityHashQueue {
-	return NewLimitHashLimitedPriorityHashQueue(Infinity, hashNeededFun)
+func NewHashLimitedPriorityHashQueue(hashNeeded bool) *LimitedPriorityHashQueue {
+	return NewLimitHashLimitedPriorityHashQueue(Infinity, hashNeeded)
 }
 
-func NewPriorityHashLimitedPriorityHashQueue(fun func(interface{}) bool, hashNeededFun *func(interface{}) interface{}) *LimitedPriorityHashQueue {
-	return NewLimitedPriorityHashQueue(fun, Infinity, hashNeededFun)
+func NewPriorityHashLimitedPriorityHashQueue(fun func(interface{}) bool, hashNeeded bool) *LimitedPriorityHashQueue {
+	return NewLimitedPriorityHashQueue(fun, Infinity, hashNeeded)
 }
 
-func NewLimitHashLimitedPriorityHashQueue(limit int, hashNeededFun *func(interface{}) interface{}) *LimitedPriorityHashQueue {
-	return NewLimitedPriorityHashQueue(func(interface{}) bool { return false }, limit, hashNeededFun)
+func NewLimitHashLimitedPriorityHashQueue(limit int, hashNeeded bool) *LimitedPriorityHashQueue {
+	return NewLimitedPriorityHashQueue(func(interface{}) bool { return false }, limit, hashNeeded)
 }
 
-func NewLimitedPriorityHashQueue(priorityFun func(interface{}) bool, limit int, hashNeededFun *func(interface{}) interface{}) *LimitedPriorityHashQueue {
+func NewLimitedPriorityHashQueue(priorityFun func(interface{}) bool, limit int, hashNeeded bool) *LimitedPriorityHashQueue {
 	var initBufSize int
 	if (limit != Infinity) && (limit < minQueueLen) {
 		initBufSize = limit
 	} else {
 		initBufSize = minQueueLen
 	}
-	var hash *map[interface{}]bool
-	var hashFun func(interface{}) interface{}
-	if hashNeededFun == nil {
-		hash = nil
-		hashFun = func(elem interface{}) interface{} { return elem }
+	var hashTable set.Set
+	if hashNeeded {
+		hashTable = set.NewHashSet()
 	} else {
-		hashT := make(map[interface{}]bool)
-		hash = &hashT
-		hashFun = *hashNeededFun
+		hashTable = nil
 	}
 	return &LimitedPriorityHashQueue{
 		head:        0,
@@ -70,8 +67,7 @@ func NewLimitedPriorityHashQueue(priorityFun func(interface{}) bool, limit int, 
 		buf:         make([]interface{}, initBufSize),
 		priorityFun: priorityFun,
 		limit:       limit,
-		hash:        hash,
-		hashFun:     hashFun,
+		hashTable:   hashTable,
 	}
 }
 
@@ -118,14 +114,9 @@ func (q *LimitedPriorityHashQueue) resize() {
 // Add puts an element to the start of end of the queue, depending
 // on the result of priorityFun.
 func (q *LimitedPriorityHashQueue) Add(elem interface{}) bool {
-	elemHash := elem
-	if q.hash != nil {
-		elemHash = q.hashFun(elem)
-		_, exists := (*(q.hash))[elemHash]
-		if exists {
-			// duplicate element; ignoring
-			return false
-		}
+	if q.hashTable != nil && q.hashTable.Contains(elem) {
+		// duplicate element; ignoring
+		return false
 	}
 	limitReached := false
 	if q.count == len(q.buf) {
@@ -171,8 +162,8 @@ func (q *LimitedPriorityHashQueue) Add(elem interface{}) bool {
 				q.head = q.getIndex(q.head + 1)
 			}
 		}
-		if q.hash != nil {
-			delete(*(q.hash), q.hashFun(deleteElem))
+		if q.hashTable != nil {
+			q.hashTable.Remove(deleteElem)
 		}
 	}
 	if priority {
@@ -189,8 +180,8 @@ func (q *LimitedPriorityHashQueue) Add(elem interface{}) bool {
 	if !limitReached {
 		q.count++
 	}
-	if q.hash != nil {
-		(*(q.hash))[elemHash] = true
+	if q.hashTable != nil {
+		q.hashTable.Add(elem)
 	}
 	return true
 }
@@ -237,8 +228,8 @@ func (q *LimitedPriorityHashQueue) Remove() interface{} {
 	if (len(q.buf) > minQueueLen) && ((q.count << 2) <= len(q.buf)) {
 		q.resize()
 	}
-	if q.hash != nil {
-		delete(*(q.hash), q.hashFun(ret))
+	if q.hashTable != nil {
+		q.hashTable.Remove(ret)
 	}
 	return ret
 }

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/Juliusan/go.infinitechannel/src/infinitechannel"
+	"github.com/Juliusan/go.infinitechannel/src/util"
 )
 
 func TestInfiniteDefaultLimitedPriorityChannelWriteReadLen(t *testing.T) {
@@ -62,9 +63,7 @@ func TestInfiniteLimitedPriorityChannelWriteReadLen(t *testing.T) {
 
 func testInfiniteLimitedPriorityChannelWriteReadLen(makeLimitedPriorityChannelFun func(fun func(i interface{}) bool, limit int) *infinitechannel.InfiniteChannel, t *testing.T) {
 	limit := 800
-	ch := makeLimitedPriorityChannelFun(func(i interface{}) bool {
-		return i.(int)%3 == 0
-	}, limit)
+	ch := makeLimitedPriorityChannelFun(util.PriorityFunMod3, limit)
 	result := func(index int) int {
 		if index <= 333 {
 			return -3*index + 999
@@ -133,8 +132,6 @@ func TestInfiniteLimitedPriorityChannelConcurrentWriteReadLen(t *testing.T) {
 
 func testInfiniteLimitedPriorityChannelConcurrentWriteReadLen(makeLimitedPriorityChannelFun func(fun func(i interface{}) bool, limit int) *infinitechannel.InfiniteChannel, t *testing.T) {
 	limit := 800
-	ch := makeLimitedPriorityChannelFun(func(i interface{}) bool {
-		return i.(int)%3 == 0
-	}, limit)
+	ch := makeLimitedPriorityChannelFun(util.PriorityFunMod3, limit)
 	testInfiniteChannelConcurrentWriteReadLen(ch, 1000, limit, nil, t)
 }

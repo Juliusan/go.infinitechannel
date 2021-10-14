@@ -4,36 +4,37 @@ import (
 	"testing"
 
 	"github.com/Juliusan/go.infinitechannel/src/queue"
+	"github.com/Juliusan/go.infinitechannel/src/util"
 )
 
 func testQueueBasicAddLengthPeekRemove(q queue.Queue, elementsToAdd int, add func(index int) int, addResult func(index int) bool, elementsToRemove int, result func(index int) int, t *testing.T) {
 	for i := 0; i < elementsToAdd; i++ {
 		value := add(i)
 		expected := addResult(i)
-		obtained := q.Add(value)
+		obtained := q.Add(util.SimpleHashable(value))
 		if obtained != expected {
 			t.Errorf("add result of element %d value %d expected %v obtained %v", i, value, expected, obtained)
 		}
 
 	}
-	obtained := q.Length()
-	if obtained != elementsToRemove {
-		t.Errorf("expected full queue length %d, obtained %d", elementsToAdd, obtained)
+	obtainedLength := q.Length()
+	if obtainedLength != elementsToRemove {
+		t.Errorf("expected full queue length %d, obtained %d", elementsToAdd, obtainedLength)
 	}
 	for i := 0; i < elementsToRemove; i++ {
-		expected := result(i)
-		obtained = q.Peek().(int)
+		expected := util.SimpleHashable(result(i))
+		obtained := q.Peek().(util.SimpleHashable)
 		if obtained != expected {
 			t.Errorf("peek %d obtained %d instead of %d", i, obtained, expected)
 		}
-		obtained = q.Remove().(int)
+		obtained = q.Remove().(util.SimpleHashable)
 		if obtained != expected {
 			t.Errorf("remove %d obtained %d instead of %d", i, obtained, expected)
 		}
 	}
-	obtained = q.Length()
-	if obtained != 0 {
-		t.Errorf("expected empty queue length 0, obtained %d", obtained)
+	obtainedLength = q.Length()
+	if obtainedLength != 0 {
+		t.Errorf("expected empty queue length 0, obtained %d", obtainedLength)
 	}
 }
 
@@ -74,36 +75,36 @@ func testDefaultQueueAddRemove(q queue.Queue, t *testing.T) {
 
 func testQueueAddRemove(q queue.Queue, elementsToAdd int, elementsToRemoveAdd int, elementsToRemove int, result func(index int) int, t *testing.T) {
 	for i := 0; i < elementsToAdd; i++ {
-		if !q.Add(i) {
+		if !q.Add(util.SimpleHashable(i)) {
 			t.Errorf("failed to add element %d", i)
 		}
 	}
 	for i := 0; i < elementsToRemoveAdd; i++ {
 		q.Remove()
 		add := elementsToAdd + i
-		if !q.Add(add) {
+		if !q.Add(util.SimpleHashable(add)) {
 			t.Errorf("failed to add element %d", add)
 		}
 	}
-	obtained := q.Length()
-	if obtained != elementsToRemove {
-		t.Errorf("expected full queue length %d, obtained %d", elementsToAdd, obtained)
+	obtainedLength := q.Length()
+	if obtainedLength != elementsToRemove {
+		t.Errorf("expected full queue length %d, obtained %d", elementsToAdd, obtainedLength)
 	}
 
 	for i := 0; i < elementsToRemove; i++ {
-		expected := result(i)
-		obtained = q.Peek().(int)
+		expected := util.SimpleHashable(result(i))
+		obtained := q.Peek().(util.SimpleHashable)
 		if obtained != expected {
 			t.Errorf("peek %d obtained %d instead of %d", i, obtained, expected)
 		}
-		obtained = q.Remove().(int)
+		obtained = q.Remove().(util.SimpleHashable)
 		if obtained != expected {
 			t.Errorf("remove %d obtained %d instead of %d", i, obtained, expected)
 		}
 	}
-	obtained = q.Length()
-	if obtained != 0 {
-		t.Errorf("expected empty queue length 0, obtained %d", obtained)
+	obtainedLength = q.Length()
+	if obtainedLength != 0 {
+		t.Errorf("expected empty queue length 0, obtained %d", obtainedLength)
 	}
 }
 
@@ -121,7 +122,7 @@ func testQueueLength(q queue.Queue, elementsToRemoveAdd int, elementsToRemove in
 	}
 
 	for i := 0; i < elementsToRemoveAdd; i++ {
-		if !q.Add(i) {
+		if !q.Add(util.SimpleHashable(i)) {
 			t.Errorf("failed to add element %d", i)
 		}
 		var expected int
@@ -156,12 +157,12 @@ func testQueueGet(q queue.Queue, elementsToAdd int, result func(iteration int, i
 		t.Skip("skipping Get test in short mode")
 	}
 	for i := 0; i < elementsToAdd; i++ {
-		if !q.Add(i) {
+		if !q.Add(util.SimpleHashable(i)) {
 			t.Errorf("failed to add element %d", i)
 		}
 		for j := 0; j < q.Length(); j++ {
-			expected := result(i, j)
-			obtained := q.Get(j).(int)
+			expected := util.SimpleHashable(result(i, j))
+			obtained := q.Get(j).(util.SimpleHashable)
 			if obtained != expected {
 				t.Errorf("iteration %d index %d contains %d instead of %d", i, j, obtained, expected)
 			}
@@ -180,12 +181,12 @@ func testQueueGetNegative(q queue.Queue, elementsToAdd int, result func(iteratio
 		t.Skip("skipping GetNegative test in short mode")
 	}
 	for i := 0; i < elementsToAdd; i++ {
-		if !q.Add(i) {
+		if !q.Add(util.SimpleHashable(i)) {
 			t.Errorf("failed to add element %d", i)
 		}
 		for j := -1; j >= -q.Length(); j-- {
-			expected := result(i, j)
-			obtained := q.Get(j).(int)
+			expected := util.SimpleHashable(result(i, j))
+			obtained := q.Get(j).(util.SimpleHashable)
 			if obtained != expected {
 				t.Errorf("iteration %d index %d contains %d instead of %d", i, j, obtained, expected)
 			}
@@ -197,7 +198,7 @@ func testQueueGetNegative(q queue.Queue, elementsToAdd int, result func(iteratio
 
 func testQueueGetOutOfRangePanics(q queue.Queue, t *testing.T) {
 	for i := 0; i < 3; i++ {
-		if !q.Add(i) {
+		if !q.Add(util.SimpleHashable(i)) {
 			t.Errorf("failed to add element %d", i)
 		}
 	}
@@ -218,7 +219,7 @@ func testQueuePeekOutOfRangePanics(q queue.Queue, t *testing.T) {
 		q.Peek()
 	})
 
-	if !q.Add(0) {
+	if !q.Add(util.SimpleHashable(0)) {
 		t.Errorf("failed to add element 0")
 	}
 	q.Remove()
@@ -235,7 +236,7 @@ func testQueueRemoveOutOfRangePanics(q queue.Queue, t *testing.T) {
 		q.Remove()
 	})
 
-	if !q.Add(0) {
+	if !q.Add(util.SimpleHashable(0)) {
 		t.Errorf("failed to add element 0")
 	}
 	q.Remove()

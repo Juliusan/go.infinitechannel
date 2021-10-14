@@ -41,36 +41,36 @@ func TestInfiniteLimitPriorityLimitedPriorityHashChannelWriteReadLen(t *testing.
 }
 
 func TestInfiniteHashLimitedPriorityHashChannelWriteReadLen(t *testing.T) {
-	testDefaultInfiniteChannelWriteReadLen(infinitechannel.NewInfiniteHashLimitedPriorityHashChannel(func(elem interface{}) interface{} { return elem }), 1000, func(index int) int { return index }, t)
+	testDefaultInfiniteChannelWriteReadLen(infinitechannel.NewInfiniteHashLimitedPriorityHashChannel(), 1000, func(index int) int { return index }, t)
 }
 
 func TestInfinitePriorityHashLimitedPriorityHashChannelWriteReadLen(t *testing.T) {
 	testInfinitePriorityChannelWriteReadLen(func(fun func(i interface{}) bool) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfinitePriorityHashLimitedPriorityHashChannel(fun, func(elem interface{}) interface{} { return elem })
+		return infinitechannel.NewInfinitePriorityHashLimitedPriorityHashChannel(fun)
 	}, t)
 }
 
 func TestInfiniteLimitHashLimitedPriorityHashChannelNoLimitWriteReadLen(t *testing.T) {
 	testInfiniteLimitLimitedPriorityChannelNoLimitWriteReadLen(func(limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit, func(elem interface{}) interface{} { return elem })
+		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit)
 	}, t)
 }
 
 func TestInfiniteLimitHashLimitedPriorityHashChannelWriteReadLen(t *testing.T) {
 	testInfiniteLimitLimitedPriorityChannelWriteReadLen(func(limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit, func(elem interface{}) interface{} { return elem })
+		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit)
 	}, t)
 }
 
 func TestInfiniteLimitedPriorityHashChannelNoLimitWriteReadLen(t *testing.T) {
 	testInfiniteLimitedPriorityChannelNoLimitWriteReadLen(func(fun func(i interface{}) bool, limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit, func(elem interface{}) interface{} { return elem })
+		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit)
 	}, t)
 }
 
 func TestInfiniteLimitedPriorityHashChannelWriteReadLen(t *testing.T) {
 	testInfiniteLimitedPriorityChannelWriteReadLen(func(fun func(i interface{}) bool, limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit, func(elem interface{}) interface{} { return elem })
+		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit)
 	}, t)
 }
 
@@ -113,35 +113,35 @@ func TestInfiniteLimitPriorityLimitedPriorityHashChannelConcurrentWriteReadLen(t
 
 func TestInfiniteHashLimitedPriorityHashChannelConcurrentWriteReadLen(t *testing.T) {
 	result := func(index int) int { return index }
-	testDefaultInfiniteChannelConcurrentWriteReadLen(infinitechannel.NewInfiniteHashLimitedPriorityHashChannel(func(elem interface{}) interface{} { return elem }), 1000, &result, t)
+	testDefaultInfiniteChannelConcurrentWriteReadLen(infinitechannel.NewInfiniteHashLimitedPriorityHashChannel(), 1000, &result, t)
 }
 
 func TestInfinitePriorityHashLimitedPriorityHashChannelConcurrentWriteReadLen(t *testing.T) {
 	testInfinitePriorityChannelConcurrentWriteReadLen(func(fun func(i interface{}) bool) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfinitePriorityHashLimitedPriorityHashChannel(fun, func(elem interface{}) interface{} { return elem })
+		return infinitechannel.NewInfinitePriorityHashLimitedPriorityHashChannel(fun)
 	}, t)
 }
 
 func TestInfiniteLimitHashLimitedPriorityHashChannelNoLimitConcurrentWriteReadLen(t *testing.T) {
 	testInfiniteLimitLimitedPriorityChannelNoLimitConcurrentWriteReadLen(func(limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit, func(elem interface{}) interface{} { return elem })
+		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit)
 	}, t)
 }
 
 func TestInfiniteLimitHashLimitedPriorityHashChannelConcurrentWriteReadLen(t *testing.T) {
 	testInfiniteLimitLimitedPriorityChannelConcurrentWriteReadLen(func(limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit, func(elem interface{}) interface{} { return elem })
+		return infinitechannel.NewInfiniteLimitHashLimitedPriorityHashChannel(limit)
 	}, t)
 }
 
 func TestInfiniteLimitedPriorityHashChannelNoLimitConcurrentWriteReadLen(t *testing.T) {
 	testInfiniteLimitedPriorityChannelNoLimitConcurrentWriteReadLen(func(fun func(i interface{}) bool, limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit, func(elem interface{}) interface{} { return elem })
+		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit)
 	}, t)
 }
 
 func TestInfiniteLimitedPriorityHashChannelConcurrentWriteReadLen(t *testing.T) {
 	testInfiniteLimitedPriorityChannelConcurrentWriteReadLen(func(fun func(i interface{}) bool, limit int) *infinitechannel.InfiniteChannel {
-		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit, func(elem interface{}) interface{} { return elem })
+		return infinitechannel.NewInfiniteLimitedPriorityHashChannel(fun, limit)
 	}, t)
 }

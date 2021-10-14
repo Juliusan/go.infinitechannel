@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/Juliusan/go.infinitechannel/src/queue"
+	"github.com/Juliusan/go.infinitechannel/src/util"
 )
 
 func BenchmarkDefaultLimitedPriorityQueueAdd10k(b *testing.B) {
@@ -19,9 +20,7 @@ func BenchmarkLimitLimitedPriorityQueueNoLimitAdd10k(b *testing.B) {
 }
 
 func benchmarkLimitLimitedPriorityQueueNoLimitAdd10k(makeLimitedQueueFun func(limit int) queue.Queue, b *testing.B) {
-	makeQueueFun := func() queue.Queue {
-		return makeLimitedQueueFun(12000)
-	}
+	makeQueueFun := func() queue.Queue { return makeLimitedQueueFun(12000) }
 	benchmarkQueueAdd10k(makeQueueFun, b)
 }
 
@@ -30,9 +29,7 @@ func BenchmarkLimitLimitedPriorityQueueAdd10k(b *testing.B) {
 }
 
 func benchmarkLimitLimitedPriorityQueueAdd10k(makeLimitedQueueFun func(limit int) queue.Queue, b *testing.B) {
-	makeQueueFun := func() queue.Queue {
-		return makeLimitedQueueFun(8000)
-	}
+	makeQueueFun := func() queue.Queue { return makeLimitedQueueFun(8000) }
 	benchmarkQueueAdd10k(makeQueueFun, b)
 }
 
@@ -53,11 +50,7 @@ func BenchmarkLimitedPriorityQueueAdd10k(b *testing.B) {
 }
 
 func benchmarkLimitedPriorityQueueAdd10k(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, b *testing.B) {
-	makeQueueFun := func() queue.Queue {
-		return makeLimitedPriorityQueueFun(func(i interface{}) bool {
-			return i.(int)%10 == 0
-		}, 8000)
-	}
+	makeQueueFun := func() queue.Queue { return makeLimitedPriorityQueueFun(util.PriorityFunMod10, 8000) }
 	benchmarkQueueAdd10k(makeQueueFun, b)
 }
 
@@ -76,9 +69,7 @@ func BenchmarkLimitLimitedPriorityQueueNoLimitRemove10k(b *testing.B) {
 }
 
 func benchmarkLimitLimitedPriorityQueueNoLimitRemove10k(makeLimitedQueueFun func(limit int) queue.Queue, b *testing.B) {
-	makeQueueFun := func() queue.Queue {
-		return makeLimitedQueueFun(12000)
-	}
+	makeQueueFun := func() queue.Queue { return makeLimitedQueueFun(12000) }
 	benchmarkDefaultQueueRemove10k(makeQueueFun, b)
 }
 
@@ -87,9 +78,7 @@ func BenchmarkLimitLimitedPriorityQueueRemove10k(b *testing.B) {
 }
 
 func benchmarkLimitLimitedPriorityQueueRemove10k(makeLimitedQueueFun func(limit int) queue.Queue, b *testing.B) {
-	makeQueueFun := func() queue.Queue {
-		return makeLimitedQueueFun(10000)
-	}
+	makeQueueFun := func() queue.Queue { return makeLimitedQueueFun(10000) }
 	benchmarkQueueRemove10k(makeQueueFun, 12000, b)
 }
 
@@ -110,10 +99,6 @@ func BenchmarkLimitedPriorityQueueRemove10k(b *testing.B) {
 }
 
 func benchmarkLimitedPriorityQueueRemove10k(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, b *testing.B) {
-	makeQueueFun := func() queue.Queue {
-		return makeLimitedPriorityQueueFun(func(i interface{}) bool {
-			return i.(int)%10 == 0
-		}, 10000)
-	}
+	makeQueueFun := func() queue.Queue { return makeLimitedPriorityQueueFun(util.PriorityFunMod10, 10000) }
 	benchmarkQueueRemove10k(makeQueueFun, 12000, b)
 }

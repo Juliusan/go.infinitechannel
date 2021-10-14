@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/Juliusan/go.infinitechannel/src/queue"
+	"github.com/Juliusan/go.infinitechannel/src/util"
 )
 
 func TestDefaultLimitedPriorityQueueSimple(t *testing.T) {
@@ -56,9 +57,7 @@ func TestLimitedPriorityQueueSimple(t *testing.T) {
 func testLimitedPriorityQueueSimple(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, t *testing.T) {
 	resultArray := []int{9, 6, 3, 0, 4, 5, 7, 8}
 	limit := len(resultArray)
-	q := makeLimitedPriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%3 == 0
-	}, limit)
+	q := makeLimitedPriorityQueueFun(util.PriorityFunMod3, limit)
 	result := func(index int) int {
 		return resultArray[index]
 	}
@@ -118,9 +117,7 @@ func TestLimitedPriorityQueueTwice(t *testing.T) {
 func testLimitedPriorityQueueTwice(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, t *testing.T) {
 	limit := 80
 	elementsToAddSingle := 50
-	q := makeLimitedPriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%3 == 0
-	}, limit)
+	q := makeLimitedPriorityQueueFun(util.PriorityFunMod3, limit)
 	addResultFun := func(index int) bool { return true }
 	resultFun := func(index int) int {
 		if index <= 16 {
@@ -156,8 +153,9 @@ func testLimitedPriorityQueueOverflow(makeLimitedPriorityQueueFun func(fun func(
 	limit := 30
 	elementsToAddSingle := 50
 	cutOff := elementsToAddSingle / 2
+	cutOffSh := util.SimpleHashable(cutOff)
 	q := makeLimitedPriorityQueueFun(func(i interface{}) bool {
-		return i.(int) < cutOff
+		return i.(util.SimpleHashable) < cutOffSh
 	}, limit)
 	addResultFun := func(index int) bool {
 		return index < elementsToAddSingle+cutOff
@@ -224,9 +222,7 @@ func TestLimitedPriorityQueueAddRemove(t *testing.T) {
 
 func testLimitedPriorityQueueAddRemove(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, t *testing.T) {
 	limit := 80
-	q := makeLimitedPriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%3 == 0
-	}, limit)
+	q := makeLimitedPriorityQueueFun(util.PriorityFunMod3, limit)
 	result := func(index int) int {
 		if index%2 == 0 {
 			return 3*index/2 + 31
@@ -287,9 +283,7 @@ func TestLimitedPriorityQueueLength(t *testing.T) {
 
 func testLimitedPriorityQueueLength(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, t *testing.T) {
 	limit := 800
-	q := makeLimitedPriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%3 == 0
-	}, limit)
+	q := makeLimitedPriorityQueueFun(util.PriorityFunMod3, limit)
 	testQueueLength(q, 1000, limit, t)
 }
 
@@ -346,9 +340,7 @@ func TestLimitedPriorityQueueGet(t *testing.T) {
 
 func testLimitedPriorityQueueGet(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, t *testing.T) {
 	limit := 800
-	q := makeLimitedPriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%2 == 0
-	}, limit)
+	q := makeLimitedPriorityQueueFun(util.PriorityFunMod2, limit)
 	result := func(iteration int, index int) int {
 		if index <= iteration/2 {
 			return iteration - iteration%2 - 2*index
@@ -407,9 +399,7 @@ func TestLimitedPriorityQueueGetNegative(t *testing.T) {
 
 func testLimitedPriorityQueueGetNegative(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, t *testing.T) {
 	limit := 800
-	q := makeLimitedPriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%2 == 0
-	}, limit)
+	q := makeLimitedPriorityQueueFun(util.PriorityFunMod2, limit)
 	result := func(iteration int, index int) int {
 		if iteration < limit {
 			if index >= -(iteration+iteration%2)/2 {
@@ -453,9 +443,7 @@ func TestLimitedPriorityQueueGetOutOfRangePanics(t *testing.T) {
 }
 
 func testLimitedPriorityQueueGetOutOfRangePanics(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, t *testing.T) {
-	q := makeLimitedPriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%2 == 0
-	}, 800)
+	q := makeLimitedPriorityQueueFun(util.PriorityFunMod2, 800)
 	testQueueGetOutOfRangePanics(q, t)
 }
 
@@ -484,9 +472,7 @@ func TestLimitedPriorityQueuePeekOutOfRangePanics(t *testing.T) {
 }
 
 func testLimitedPriorityQueuePeekOutOfRangePanics(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, t *testing.T) {
-	q := makeLimitedPriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%2 == 0
-	}, 800)
+	q := makeLimitedPriorityQueueFun(util.PriorityFunMod2, 800)
 	testQueuePeekOutOfRangePanics(q, t)
 }
 
@@ -515,8 +501,6 @@ func TestLimitedPriorityQueueRemoveOutOfRangePanics(t *testing.T) {
 }
 
 func testLimitedPriorityQueueRemoveOutOfRangePanics(makeLimitedPriorityQueueFun func(fun func(i interface{}) bool, limit int) queue.Queue, t *testing.T) {
-	q := makeLimitedPriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%2 == 0
-	}, 800)
+	q := makeLimitedPriorityQueueFun(util.PriorityFunMod2, 800)
 	testQueueRemoveOutOfRangePanics(q, t)
 }

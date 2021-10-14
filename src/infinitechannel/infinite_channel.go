@@ -72,20 +72,20 @@ func NewInfiniteLimitPriorityLimitedPriorityHashChannel(priorityFun func(interfa
 	return newInfiniteChannel(queue.NewLimitPriorityLimitedPriorityHashQueue(priorityFun, limit))
 }
 
-func NewInfiniteHashLimitedPriorityHashChannel(hashFun func(interface{}) interface{}) *InfiniteChannel {
-	return newInfiniteChannel(queue.NewHashLimitedPriorityHashQueue(&hashFun))
+func NewInfiniteHashLimitedPriorityHashChannel() *InfiniteChannel {
+	return newInfiniteChannel(queue.NewHashLimitedPriorityHashQueue(true))
 }
 
-func NewInfinitePriorityHashLimitedPriorityHashChannel(priorityFun func(interface{}) bool, hashFun func(interface{}) interface{}) *InfiniteChannel {
-	return newInfiniteChannel(queue.NewPriorityHashLimitedPriorityHashQueue(priorityFun, &hashFun))
+func NewInfinitePriorityHashLimitedPriorityHashChannel(priorityFun func(interface{}) bool) *InfiniteChannel {
+	return newInfiniteChannel(queue.NewPriorityHashLimitedPriorityHashQueue(priorityFun, true))
 }
 
-func NewInfiniteLimitHashLimitedPriorityHashChannel(limit int, hashFun func(interface{}) interface{}) *InfiniteChannel {
-	return newInfiniteChannel(queue.NewLimitHashLimitedPriorityHashQueue(limit, &hashFun))
+func NewInfiniteLimitHashLimitedPriorityHashChannel(limit int) *InfiniteChannel {
+	return newInfiniteChannel(queue.NewLimitHashLimitedPriorityHashQueue(limit, true))
 }
 
-func NewInfiniteLimitedPriorityHashChannel(priorityFun func(interface{}) bool, limit int, hashFun func(interface{}) interface{}) *InfiniteChannel {
-	return newInfiniteChannel(queue.NewLimitedPriorityHashQueue(priorityFun, limit, &hashFun))
+func NewInfiniteLimitedPriorityHashChannel(priorityFun func(interface{}) bool, limit int) *InfiniteChannel {
+	return newInfiniteChannel(queue.NewLimitedPriorityHashQueue(priorityFun, limit, true))
 }
 
 func NewInfiniteDefaultLimitedPriorityHashListChannel() *InfiniteChannel {
@@ -104,20 +104,20 @@ func NewInfiniteLimitPriorityLimitedPriorityHashListChannel(priorityFun func(int
 	return newInfiniteChannel(queue.NewLimitPriorityLimitedPriorityHashListQueue(priorityFun, limit))
 }
 
-func NewInfiniteHashLimitedPriorityHashListChannel(hashFun func(interface{}) interface{}) *InfiniteChannel {
-	return newInfiniteChannel(queue.NewHashLimitedPriorityHashListQueue(&hashFun))
+func NewInfiniteHashLimitedPriorityHashListChannel() *InfiniteChannel {
+	return newInfiniteChannel(queue.NewHashLimitedPriorityHashListQueue(true))
 }
 
-func NewInfinitePriorityHashLimitedPriorityHashListChannel(priorityFun func(interface{}) bool, hashFun func(interface{}) interface{}) *InfiniteChannel {
-	return newInfiniteChannel(queue.NewPriorityHashLimitedPriorityHashListQueue(priorityFun, &hashFun))
+func NewInfinitePriorityHashLimitedPriorityHashListChannel(priorityFun func(interface{}) bool) *InfiniteChannel {
+	return newInfiniteChannel(queue.NewPriorityHashLimitedPriorityHashListQueue(priorityFun, true))
 }
 
-func NewInfiniteLimitHashLimitedPriorityHashListChannel(limit int, hashFun func(interface{}) interface{}) *InfiniteChannel {
-	return newInfiniteChannel(queue.NewLimitHashLimitedPriorityHashListQueue(limit, &hashFun))
+func NewInfiniteLimitHashLimitedPriorityHashListChannel(limit int) *InfiniteChannel {
+	return newInfiniteChannel(queue.NewLimitHashLimitedPriorityHashListQueue(limit, true))
 }
 
-func NewInfiniteLimitedPriorityHashListChannel(priorityFun func(interface{}) bool, limit int, hashFun func(interface{}) interface{}) *InfiniteChannel {
-	return newInfiniteChannel(queue.NewLimitedPriorityHashListQueue(priorityFun, limit, &hashFun))
+func NewInfiniteLimitedPriorityHashListChannel(priorityFun func(interface{}) bool, limit int) *InfiniteChannel {
+	return newInfiniteChannel(queue.NewLimitedPriorityHashListQueue(priorityFun, limit, true))
 }
 
 func newInfiniteChannel(queue queue.Queue) *InfiniteChannel {

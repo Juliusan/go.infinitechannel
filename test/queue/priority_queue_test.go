@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/Juliusan/go.infinitechannel/src/queue"
+	"github.com/Juliusan/go.infinitechannel/src/util"
 )
 
 func TestDefaultPriorityQueueSimple(t *testing.T) {
@@ -15,9 +16,7 @@ func TestPriorityQueueSimple(t *testing.T) {
 }
 
 func testPriorityQueueSimple(makePriorityQueueFun func(func(i interface{}) bool) queue.Queue, t *testing.T) {
-	q := makePriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%3 == 0
-	})
+	q := makePriorityQueueFun(util.PriorityFunMod3)
 	resultArray := []int{9, 6, 3, 0, 1, 2, 4, 5, 7, 8}
 	result := func(index int) int {
 		return resultArray[index]
@@ -37,9 +36,7 @@ func TestPriorityQueueTwice(t *testing.T) {
 }
 
 func testPriorityQueueTwice(makePriorityQueueFun func(func(i interface{}) bool) queue.Queue, t *testing.T) {
-	q := makePriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%3 == 0
-	})
+	q := makePriorityQueueFun(util.PriorityFunMod3)
 	elementsToAddSingle := 50
 	addResultFun := func(index int) bool { return true }
 	resultFun := func(index int) int {
@@ -75,9 +72,7 @@ func TestPriorityQueueAddRemove(t *testing.T) {
 }
 
 func testPriorityQueueAddRemove(makePriorityQueueFun func(func(i interface{}) bool) queue.Queue, t *testing.T) {
-	q := makePriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%3 == 0
-	})
+	q := makePriorityQueueFun(util.PriorityFunMod3)
 	result := func(index int) int {
 		if index%2 == 0 {
 			return 3*index/2 + 1
@@ -100,9 +95,7 @@ func TestPriorityQueueLength(t *testing.T) {
 }
 
 func testPriorityQueueLength(makePriorityQueueFun func(func(i interface{}) bool) queue.Queue, t *testing.T) {
-	q := makePriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%3 == 0
-	})
+	q := makePriorityQueueFun(util.PriorityFunMod3)
 	elementsToAdd := 1000
 	testQueueLength(q, elementsToAdd, elementsToAdd, t)
 }
@@ -118,9 +111,7 @@ func TestPriorityQueueGet(t *testing.T) {
 }
 
 func testPriorityQueueGet(makePriorityQueueFun func(func(i interface{}) bool) queue.Queue, t *testing.T) {
-	q := makePriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%2 == 0
-	})
+	q := makePriorityQueueFun(util.PriorityFunMod2)
 	result := func(iteration int, index int) int {
 		if index <= iteration/2 {
 			return iteration - iteration%2 - 2*index
@@ -142,9 +133,7 @@ func TestPriorityQueueGetNegative(t *testing.T) {
 }
 
 func testPriorityQueueGetNegative(makePriorityQueueFun func(func(i interface{}) bool) queue.Queue, t *testing.T) {
-	q := makePriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%2 == 0
-	})
+	q := makePriorityQueueFun(util.PriorityFunMod2)
 	result := func(iteration int, index int) int {
 		if index >= -(iteration+iteration%2)/2 {
 			return iteration + iteration%2 + 2*index + 1
@@ -166,9 +155,7 @@ func TestPriorityQueueGetOutOfRangePanics(t *testing.T) {
 }
 
 func testPriorityQueueGetOutOfRangePanics(makePriorityQueueFun func(func(i interface{}) bool) queue.Queue, t *testing.T) {
-	q := makePriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%2 == 0
-	})
+	q := makePriorityQueueFun(util.PriorityFunMod2)
 	testQueueGetOutOfRangePanics(q, t)
 }
 
@@ -183,9 +170,7 @@ func TestPriorityQueuePeekOutOfRangePanics(t *testing.T) {
 }
 
 func testPriorityQueuePeekOutOfRangePanics(makePriorityQueueFun func(func(i interface{}) bool) queue.Queue, t *testing.T) {
-	q := makePriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%2 == 0
-	})
+	q := makePriorityQueueFun(util.PriorityFunMod2)
 	testQueuePeekOutOfRangePanics(q, t)
 }
 
@@ -200,8 +185,6 @@ func TestPriorityQueueRemoveOutOfRangePanics(t *testing.T) {
 }
 
 func testPriorityQueueRemoveOutOfRangePanics(makePriorityQueueFun func(func(i interface{}) bool) queue.Queue, t *testing.T) {
-	q := makePriorityQueueFun(func(i interface{}) bool {
-		return i.(int)%2 == 0
-	})
+	q := makePriorityQueueFun(util.PriorityFunMod2)
 	testQueueRemoveOutOfRangePanics(q, t)
 }
